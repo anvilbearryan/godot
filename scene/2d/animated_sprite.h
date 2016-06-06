@@ -72,6 +72,10 @@ public:
 	void set_animation_speed(const StringName& p_anim,float p_fps);
 	float get_animation_speed(const StringName& p_anim) const;
 
+	// begin anvilbear modifcation
+	float get_animation_length(const StringName& p_anim) const;
+	// end anvilbear modification
+
 	void set_animation_loop(const StringName& p_anim,bool p_loop);
 	bool get_animation_loop(const StringName& p_anim) const;
 
@@ -152,6 +156,7 @@ public:
 	void play(const StringName& p_animation=StringName());
 	void stop();
 	bool is_playing() const;
+	bool is_finished() const;
 
 	void set_animation(const StringName& p_animation);
 	StringName get_animation() const;

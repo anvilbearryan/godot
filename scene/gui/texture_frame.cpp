@@ -50,10 +50,8 @@ void TextureFrame::_notification(int p_what) {
 			} break;
 			case STRETCH_KEEP: {
 				draw_texture_rect(texture,Rect2(Point2(),texture->get_size()),false,modulate);
-
 			} break;
 			case STRETCH_KEEP_CENTERED: {
-
 				Vector2 ofs = (get_size() - texture->get_size())/2;
 				draw_texture_rect(texture,Rect2(ofs,texture->get_size()),false,modulate);
 			} break;
@@ -71,17 +69,20 @@ void TextureFrame::_notification(int p_what) {
 
 				int ofs_x = 0;
 				int ofs_y = 0;
-
-				if (stretch_mode==STRETCH_KEEP_ASPECT_CENTERED) {
-					ofs_x+=(size.width - tex_width)/2;
-					ofs_y+=(size.height - tex_height)/2;
+				if (stretch_mode == STRETCH_KEEP_ASPECT_CENTERED) {
+					ofs_x += (size.width - tex_width) / 2;
+					ofs_y += (size.height - tex_height) / 2;
 				}
 
-				draw_texture_rect(texture,Rect2(ofs_x,ofs_y,tex_width,tex_height));
+				draw_texture_rect(texture, Rect2(ofs_x, ofs_y, tex_width, tex_height));
 			} break;
-
+			case STRETCH_SCALE_CENTERED: {
+				Size2 loc_size = get_size();
+				Size2 size_div = loc_size / texture->get_size();
+				Size2 draw_size = texture->get_size() * MIN(size_div.y, size_div.x);
+				draw_texture_rect(texture, Rect2((loc_size - draw_size) / 2, draw_size), false, modulate);
+			} break;
 		}
-
 	}
 }
 
@@ -107,7 +108,7 @@ void TextureFrame::_bind_methods() {
 	ADD_PROPERTYNZ( PropertyInfo( Variant::OBJECT, "texture", PROPERTY_HINT_RESOURCE_TYPE, "Texture"), _SCS("set_texture"),_SCS("get_texture") );
 	ADD_PROPERTYNO( PropertyInfo( Variant::COLOR, "modulate"), _SCS("set_modulate"),_SCS("get_modulate") );
 	ADD_PROPERTYNZ( PropertyInfo( Variant::BOOL, "expand" ), _SCS("set_expand"),_SCS("has_expand") );
-	ADD_PROPERTYNO( PropertyInfo( Variant::INT, "stretch_mode",PROPERTY_HINT_ENUM,"Scale On Expand (Compat),Scale,Tile,Keep,Keep Centered,Keep Aspect,Keep Aspect Centered"), _SCS("set_stretch_mode"),_SCS("get_stretch_mode") );
+	ADD_PROPERTYNO( PropertyInfo( Variant::INT, "stretch_mode",PROPERTY_HINT_ENUM,"Scale On Expand (Compat),Scale,Tile,Keep,Keep Centered,Keep Aspect,Keep Aspect Centered,Scale Centered"), _SCS("set_stretch_mode"),_SCS("get_stretch_mode") );
 
 	BIND_CONSTANT( STRETCH_SCALE_ON_EXPAND );
 	BIND_CONSTANT( STRETCH_SCALE );
@@ -116,7 +117,7 @@ void TextureFrame::_bind_methods() {
 	BIND_CONSTANT( STRETCH_KEEP_CENTERED );
 	BIND_CONSTANT( STRETCH_KEEP_ASPECT );
 	BIND_CONSTANT( STRETCH_KEEP_ASPECT_CENTERED );
-
+	BIND_CONSTANT( STRETCH_SCALE_CENTERED );
 }
 
 

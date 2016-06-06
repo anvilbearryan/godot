@@ -144,6 +144,12 @@ float SpriteFrames::get_animation_speed(const StringName& p_anim) const{
 	return E->get().speed;
 }
 
+float SpriteFrames::get_animation_length(const StringName& p_anim) const {
+	const Map<StringName, Anim>::Element *E = animations.find(p_anim);
+	ERR_FAIL_COND_V(!E, 0);
+	return E->get().frames.size() / E->get().speed;
+}
+
 void SpriteFrames::set_animation_loop(const StringName& p_anim,bool p_loop){
 	Map<StringName,Anim>::Element *E=animations.find(p_anim);
 	ERR_FAIL_COND(!E);
@@ -243,6 +249,10 @@ void SpriteFrames::_bind_methods() {
 
 	ObjectTypeDB::bind_method(_MD("_set_frames"),&SpriteFrames::_set_frames);
 	ObjectTypeDB::bind_method(_MD("_get_frames"),&SpriteFrames::_get_frames);
+
+	// begin anvilbear modification
+	ObjectTypeDB::bind_method(_MD("get_animation_length", "anim"), &SpriteFrames::get_animation_length);
+	// end anvilbear modification
 
 	ADD_PROPERTYNZ( PropertyInfo(Variant::ARRAY,"frames",PROPERTY_HINT_NONE,"",0),_SCS("_set_frames"),_SCS("_get_frames")); //compatibility
 
@@ -351,19 +361,21 @@ void AnimatedSprite::_notification(int p_what) {
 
 				if (timeout<=0) {
 
-					timeout=1.0/speed;
-
 					int fc = frames->get_frame_count(animation);
 					if (frame>=fc-1) {
 						if (frames->get_animation_loop(animation)) {
 							frame=0;
 						} else {
 							frame=fc-1;
+							// early exit so we don't do anything for non-looping ended animations, may want to
+							// broadcast once more "frame" notify, pending
+							break;
 						}
 					} else {
 						frame++;
 					}
-
+					// to avoid timeout being reset for non-looping animations so queries can be use timeout value
+					timeout = 1.0 / speed;
 					update();
 					_change_notify("frame");
 				}
@@ -615,6 +627,10 @@ bool AnimatedSprite::is_playing() const {
 	return is_processing();
 }
 
+bool AnimatedSprite::is_finished() const {
+	return !frames->get_animation_loop(animation) && (frame >= frames->get_frame_count(animation) - 1) && timeout <= 0;
+}
+
 void AnimatedSprite::_reset_timeout() {
 
 	if (!playing)
@@ -673,6 +689,7 @@ void AnimatedSprite::_bind_methods() {
 	ObjectTypeDB::bind_method(_MD("play","anim"),&AnimatedSprite::play,DEFVAL(StringName()));
 	ObjectTypeDB::bind_method(_MD("stop"),&AnimatedSprite::stop);
 	ObjectTypeDB::bind_method(_MD("is_playing"),&AnimatedSprite::is_playing);
+	ObjectTypeDB::bind_method(_MD("is_finished"), &AnimatedSprite::is_finished);
 
 	ObjectTypeDB::bind_method(_MD("set_centered","centered"),&AnimatedSprite::set_centered);
 	ObjectTypeDB::bind_method(_MD("is_centered"),&AnimatedSprite::is_centered);
