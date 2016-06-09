@@ -136,7 +136,10 @@ void TextureProgress::_notification(int p_what){
 				switch (mode) {
 				case FILL_LEFT_TO_RIGHT: {
 					Rect2 region=Rect2(Point2(),Size2(s.x*get_unit_value(),s.y));
-					draw_texture_rect_region(progress,region,region);
+					//draw_texture_rect_region(progress,region,region);
+					// Begin anvilbear modifcation
+					progress->draw_rect_region(get_canvas_item(), Rect2(Point2(), s), region);
+					// End anvilbear modifcation
 				} break;
 				case FILL_RIGHT_TO_LEFT: {
 					Rect2 region=Rect2(Point2(s.x-s.x*get_unit_value(),0),Size2(s.x*get_unit_value(),s.y));

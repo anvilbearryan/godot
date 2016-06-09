@@ -3579,15 +3579,18 @@ CanvasItemEditor::CanvasItemEditor(EditorNode *p_editor) {
 
 	zoom=1;
 	snap_offset=Vector2(0, 0);
-	snap_step=Vector2(10, 10);
+	// Begin anvilbear modification
+	snap_step=Vector2(8, 8);	// modified, Godot default = 10,10
 	snap_rotation_offset=0;
 	snap_rotation_step=15 / (180 / Math_PI);
-	snap_grid=false;
-	snap_show_grid=false;
-	snap_rotation=false;
-	snap_pixel=false;
+	snap_grid = true;	// modified, Godot default = false
+	snap_show_grid = true;	// modified, Godot default = false
+	snap_rotation = true;	// modified, Godot default = false
+	snap_pixel = true;	// modified, Godot default = false
+	// Endanvilbear modification
 	skeleton_show_bones=true;
 	skeleton_menu->set_item_checked(skeleton_menu->get_item_index(SKELETON_SHOW_BONES),true);
+
 	updating_value_dialog=false;
 	box_selecting=false;
 	//zoom=0.5;
