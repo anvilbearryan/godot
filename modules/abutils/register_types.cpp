@@ -29,12 +29,12 @@
 #include "register_types.h"
 #include "object_type_db.h"
 #include "arrow_2d.h"
+#include "abmath.h"
 
 void register_abutils_types() {
 	ObjectTypeDB::register_type<Arrow2D>();
+	ObjectTypeDB::register_type<ABMath>();
 }
-
-
 
 void unregister_abutils_types() {
 
