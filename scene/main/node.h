@@ -236,6 +236,9 @@ public:
 
 	int get_child_count() const;
 	Node *get_child(int p_index) const;
+	// Begin anvilbear modification
+	Node *get_last_child() const;
+	// End anvilbear modification
 	bool has_node(const NodePath& p_path) const;
 	Node *get_node(const NodePath& p_path) const;
 	Node* find_node(const String& p_mask,bool p_recursive=true,bool p_owned=true) const;

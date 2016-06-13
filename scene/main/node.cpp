@@ -1518,8 +1518,12 @@ Node *Node::get_child(int p_index) const {
 
 	return data.children[p_index];
 }
+// Begin anvilbear modification
+Node *Node::get_last_child() const {
 
-
+	return get_child(get_child_count() - 1);
+}
+// End anvilbear modification
 Node *Node::_get_child_by_name(const StringName& p_name) const {
 
 	int cc=data.children.size();
@@ -2823,6 +2827,9 @@ void Node::_bind_methods() {
 	ObjectTypeDB::bind_method(_MD("get_child_count"),&Node::get_child_count);
 	ObjectTypeDB::bind_method(_MD("get_children"),&Node::_get_children);
 	ObjectTypeDB::bind_method(_MD("get_child:Node","idx"),&Node::get_child);
+	// Begin anvilbear modification
+	ObjectTypeDB::bind_method(_MD("get_last_child"), &Node::get_last_child);
+	// End anvilbear modification
 	ObjectTypeDB::bind_method(_MD("has_node","path"),&Node::has_node);
 	ObjectTypeDB::bind_method(_MD("get_node:Node","path"),&Node::get_node);
 	ObjectTypeDB::bind_method(_MD("get_parent:Node"),&Node::get_parent);
