@@ -30,10 +30,12 @@
 #include "object_type_db.h"
 #include "arrow_2d.h"
 #include "abmath.h"
+#include "one_way_tile_map.h"
 
 void register_abutils_types() {
 	ObjectTypeDB::register_type<Arrow2D>();
 	ObjectTypeDB::register_type<ABMath>();
+	ObjectTypeDB::register_type<OneWayTileMap>();
 }
 
 void unregister_abutils_types() {

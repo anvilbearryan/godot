@@ -1,39 +1,51 @@
-#include "arrow_2d.h"
+#include "one_way_tile_map.h"
 
-void Arrow2D::_draw_arrow() {
+void OneWayTileMap::set_one_way_collision_direction(const Vector2& p_dir) {
 
-	draw_line(Point2(-10, 0), Point2(+9, 0), Color(1, 0.5, 0.5));
-	draw_line(Point2(7, 3), Point2(+10, 0), Color(1, 0.5, 0.5));
-	draw_line(Point2(7, -3), Point2(+10, 0), Color(1, 0.5, 0.5));
-	draw_line(Point2(0, -10), Point2(0, +9), Color(0.5, 1, 0.5));
-	draw_line(Point2(3, 7), Point2(0, +10), Color(0.5, 1, 0.5));
-	draw_line(Point2(-3, 7), Point2(0, +10), Color(0.5, 1, 0.5));
+	one_way_collision_direction = p_dir;
+	
+	for (Map<PosKey, Quadrant>::Element *E = quadrant_map.front();E;E = E->next()) {
+
+		Quadrant &q = E->get();
+		Physics2DServer::get_singleton()->body_set_one_way_collision_direction(q.body, p_dir);
+	}
 }
 
-Rect2 Arrow2D::get_item_rect() const {
+Vector2 OneWayTileMap::get_one_way_collision_direction() const {
 
-	return Rect2(Point2(-10, -10), Size2(20, 20));
+	return one_way_collision_direction;
 }
 
-void Arrow2D::_notification(int p_what) {
 
-	switch (p_what) {
+void OneWayTileMap::set_one_way_collision_max_depth(float p_depth) {
 
-	case NOTIFICATION_ENTER_TREE: {
+	one_way_collision_max_depth = p_depth;
 
-		update();
-	} break;
-	case NOTIFICATION_DRAW: {
-		if (!is_inside_tree())
-			break;
-		if (get_tree()->is_editor_hint())
-			_draw_arrow();
+	for (Map<PosKey, Quadrant>::Element *E = quadrant_map.front();E;E = E->next()) {
 
-	} break;
+		Quadrant &q = E->get();
+		Physics2DServer::get_singleton()->body_set_one_way_collision_max_depth(q.body, p_depth);
 	}
 
 }
 
-Arrow2D::Arrow2D()
-{
+float OneWayTileMap::get_one_way_collision_max_depth() const {
+
+	return one_way_collision_max_depth;
+}
+
+void OneWayTileMap::_bind_methods(){
+	ObjectTypeDB::bind_method(_MD("set_one_way_collision_direction", "dir"), &OneWayTileMap::set_one_way_collision_direction);
+	ObjectTypeDB::bind_method(_MD("get_one_way_collision_direction"), &OneWayTileMap::get_one_way_collision_direction);
+	ObjectTypeDB::bind_method(_MD("set_one_way_collision_max_depth", "depth"), &OneWayTileMap::set_one_way_collision_max_depth);
+	ObjectTypeDB::bind_method(_MD("get_one_way_collision_max_depth"), &OneWayTileMap::get_one_way_collision_max_depth);
+
+	ADD_PROPERTYNZ(PropertyInfo(Variant::VECTOR2, "one_way_collision/direction"), _SCS("set_one_way_collision_direction"), _SCS("get_one_way_collision_direction"));
+	ADD_PROPERTYNZ(PropertyInfo(Variant::REAL, "one_way_collision/max_depth"), _SCS("set_one_way_collision_max_depth"), _SCS("get_one_way_collision_max_depth"));
+}
+
+OneWayTileMap::OneWayTileMap() :TileMap(){
+
+	set_one_way_collision_max_depth(0);
+
 }

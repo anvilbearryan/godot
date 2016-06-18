@@ -71,7 +71,7 @@ private:
 	bool use_kinematic;
 	Navigation2D *navigation;
 
-
+protected:
 	union PosKey {
 
 		struct {
@@ -134,7 +134,7 @@ private:
 	};
 
 	Map<PosKey,Quadrant> quadrant_map;
-
+private:
 	SelfList<Quadrant>::List dirty_quadrant_list;
 
 	bool pending_update;
@@ -179,8 +179,9 @@ private:
 	Array get_used_cells() const;
 
 protected:
-
-
+	// begin anvilbear modification
+//	Map<PosKey, Quadrant>* get_quadrant_map() const;
+	// end anvilbear modification
 	void _notification(int p_what);
 	static void _bind_methods();
 

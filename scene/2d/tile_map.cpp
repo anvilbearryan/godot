@@ -1198,7 +1198,6 @@ void TileMap::set_blend_mode(BlendMode p_blend_mode) {
 	
 }
 
-
 void TileMap::_bind_methods() {
 
 

@@ -8,14 +8,18 @@ class OneWayTileMap : public TileMap {
 
 	OBJ_TYPE(OneWayTileMap, TileMap)
 
-		void _draw_arrow();
+	Vector2 one_way_collision_direction;
+	float one_way_collision_max_depth;
 protected:
-
-	void _notification(int p_what);
+	static void _bind_methods();
 public:
+	void set_one_way_collision_direction(const Vector2& p_dir);
+	Vector2 get_one_way_collision_direction() const;
 
-	virtual Rect2 get_item_rect() const;
-	Arrow2D();
+	void set_one_way_collision_max_depth(float p_dir);
+	float get_one_way_collision_max_depth() const;
+
+	OneWayTileMap();
 };
 
-#endif // ARROW_2D_H
+#endif // ONE_WAY_TILE_MAP_H
