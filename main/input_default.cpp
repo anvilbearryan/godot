@@ -315,11 +315,13 @@ void InputDefault::parse_input_event(const InputEvent& p_event) {
 				keys_pressed.erase(p_event.key.scancode);
 		} break;
 		case InputEvent::MOUSE_BUTTON: {
+			// begin anvilbear modification
+			
+			//if (p_event.mouse_button.doubleclick)
+			//	break;
 
-			if (p_event.mouse_button.doubleclick)
-				break;
-
-			if (p_event.mouse_button.pressed)
+			if (p_event.mouse_button.pressed || p_event.mouse_button.doubleclick)
+			// end anvilbear modification
 				mouse_button_mask|=(1<<p_event.mouse_button.button_index);
 			else
 				mouse_button_mask&=~(1<<p_event.mouse_button.button_index);
