@@ -13,6 +13,8 @@ protected:
 
 public:
 	Vector2 clip_point_in_rect(Vector2 vec, Rect2 rect);
+	float fast_atan2(float y, float x);
+	float fast_atanv(Vector2 point);
 	ABMath();
 };
 

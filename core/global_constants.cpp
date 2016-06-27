@@ -534,6 +534,12 @@ static _GlobalConstant _global_constants[]={
 	{"TYPE_VECTOR3_ARRAY",Variant::VECTOR3_ARRAY},
 	{"TYPE_COLOR_ARRAY",Variant::COLOR_ARRAY},
 	{"TYPE_MAX",Variant::VARIANT_MAX},
+	// begin anvilbear modification
+	{ "DIRECTION_UP", 8},
+	{ "DIRECTION_DOWN", 2},
+	{ "DIRECTION_LEFT", 4},
+	{ "DIRECTION_RIGHT", 6},
+	// end anvilbear modification
 	{NULL,0}
 
 };
