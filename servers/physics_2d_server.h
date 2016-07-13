@@ -139,6 +139,9 @@ class Physics2DDirectSpaceState : public Object {
 
 	Array _intersect_point(const Vector2& p_point,int p_max_results=32,const Vector<RID>& p_exclude=Vector<RID>(),uint32_t p_layers=0,uint32_t p_object_type_mask=TYPE_MASK_COLLISION);
 	Array _intersect_shape(const Ref<Physics2DShapeQueryParameters> &p_shape_query,int p_max_results=32);
+	// begin anvilbear modification
+	Array _intersect_shape_simple(const Ref<Physics2DShapeQueryParameters> &p_shape_query, int p_max_results = 6);
+	// end anvilbear modification
 	Array _cast_motion(const Ref<Physics2DShapeQueryParameters> &p_shape_query);
 	Array _collide_shape(const Ref<Physics2DShapeQueryParameters> &p_shape_query,int p_max_results=32);
 	Dictionary _get_rest_info(const Ref<Physics2DShapeQueryParameters> &p_shape_query);

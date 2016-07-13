@@ -276,6 +276,22 @@ Array Physics2DDirectSpaceState::_intersect_shape(const Ref<Physics2DShapeQueryP
 	return ret;
 }
 
+// begin anvilbear modification
+Array Physics2DDirectSpaceState::_intersect_shape_simple(const Ref<Physics2DShapeQueryParameters> &psq, int p_max_results) {
+	Vector<ShapeResult> sr;
+	sr.resize(p_max_results);
+	int rc = intersect_shape(psq->shape, psq->transform, psq->motion, psq->margin, sr.ptr(), sr.size(), psq->exclude, psq->layer_mask, psq->object_type_mask);
+	Array ret;
+	ret.resize(rc);
+	for (int i = 0;i<rc;i++) {
+
+		ret[i] = sr[i].collider;
+	}
+
+	return ret;
+}
+// end anvilbear modification
+
 Array Physics2DDirectSpaceState::_cast_motion(const Ref<Physics2DShapeQueryParameters> &psq){
 
 	float closest_safe,closest_unsafe;
@@ -373,6 +389,10 @@ void Physics2DDirectSpaceState::_bind_methods() {
 	ObjectTypeDB::bind_method(_MD("collide_shape","shape:Physics2DShapeQueryParameters","max_results"),&Physics2DDirectSpaceState::_collide_shape,DEFVAL(32));
 	ObjectTypeDB::bind_method(_MD("get_rest_info","shape:Physics2DShapeQueryParameters"),&Physics2DDirectSpaceState::_get_rest_info);
 	//ObjectTypeDB::bind_method(_MD("cast_motion","shape","xform","motion","exclude","umask"),&Physics2DDirectSpaceState::_intersect_shape,DEFVAL(Array()),DEFVAL(0));
+	
+	// begin anvilbear modification
+	ObjectTypeDB::bind_method(_MD("intersect_shape_simple", "shape:Physics2DShapeQueryParameters", "max_results"), &Physics2DDirectSpaceState::_intersect_shape_simple, DEFVAL(6));
+	// endanvilbear modification
 
 	BIND_CONSTANT( TYPE_MASK_STATIC_BODY );
 	BIND_CONSTANT( TYPE_MASK_KINEMATIC_BODY );
