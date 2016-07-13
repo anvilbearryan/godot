@@ -45,7 +45,9 @@ public:
 		STRETCH_KEEP_CENTERED,
 		STRETCH_KEEP_ASPECT,
 		STRETCH_KEEP_ASPECT_CENTERED,
+		// Begin anvilbear modification
 		STRETCH_SCALE_CENTERED,
+		// End anvilbear modification
 	};
 private:
 	bool expand;

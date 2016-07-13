@@ -133,17 +133,24 @@ void GridContainer::_notification(int p_what) {
 					s.height+=row_expand;
 				if (col_expanded.has(col))
 					s.width+=col_expand;
-
+				
 				Point2 p(col_ofs,row_ofs);
+
+				// Begin anvilbear modification
+				s.width = MIN(s.width, size.x / columns);
+				// End anvilbear modification
 
 //				print_line("col: "+itos(col)+" row: "+itos(row)+" col_ofs: "+itos(col_ofs)+" row_ofs: "+itos(row_ofs));
 				fit_child_in_rect(c,Rect2(p,s));
 				//print_line("col: "+itos(col)+" row: "+itos(row)+" rect: "+Rect2(p,s));
 
-				if (col_minw.has(col)) {
-					col_ofs+=col_minw[col]+hsep+(col_expanded.has(col)?col_expand:0);
-				}
+//				if (col_minw.has(col)) {
+//					col_ofs+=col_minw[col]+hsep+(col_expanded.has(col)?col_expand:0);
+//				}
 
+				// Begin anvilbear modification
+				col_ofs += MAX(s.width, size.x / columns);
+				// End anvilbear modification
 				idx++;
 			}
 

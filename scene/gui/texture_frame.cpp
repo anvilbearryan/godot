@@ -76,12 +76,14 @@ void TextureFrame::_notification(int p_what) {
 
 				draw_texture_rect(texture, Rect2(ofs_x, ofs_y, tex_width, tex_height));
 			} break;
+			// Begin anvilbear modification
 			case STRETCH_SCALE_CENTERED: {
 				Size2 loc_size = get_size();
 				Size2 size_div = loc_size / texture->get_size();
 				Size2 draw_size = texture->get_size() * MIN(size_div.y, size_div.x);
 				draw_texture_rect(texture, Rect2((loc_size - draw_size) / 2, draw_size), false, modulate);
 			} break;
+			// End anvilbear modification
 		}
 	}
 }
@@ -117,7 +119,9 @@ void TextureFrame::_bind_methods() {
 	BIND_CONSTANT( STRETCH_KEEP_CENTERED );
 	BIND_CONSTANT( STRETCH_KEEP_ASPECT );
 	BIND_CONSTANT( STRETCH_KEEP_ASPECT_CENTERED );
+	// Begin anvilbear modification
 	BIND_CONSTANT( STRETCH_SCALE_CENTERED );
+	// End anvilbear modification
 }
 
 
