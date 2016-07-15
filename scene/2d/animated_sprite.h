@@ -156,7 +156,11 @@ public:
 	void play(const StringName& p_animation=StringName());
 	void stop();
 	bool is_playing() const;
+	// begin anvilbear modifcation
+	float play_rate;
+	void set_play_rate(float rate);
 	bool is_finished() const;
+	// end anvilbear modifcation
 
 	void set_animation(const StringName& p_animation);
 	StringName get_animation() const;

@@ -351,7 +351,7 @@ void AnimatedSprite::_notification(int p_what) {
 			if (frame<0)
 				return;
 
-			float speed = frames->get_animation_speed(animation);
+			float speed = frames->get_animation_speed(animation) * play_rate;
 			if (speed==0)
 				return; //do nothing
 
@@ -627,9 +627,15 @@ bool AnimatedSprite::is_playing() const {
 	return is_processing();
 }
 
+// begin anvilbear modifcation
+void AnimatedSprite::set_play_rate(float rate) {
+	play_rate = rate;
+}
+
 bool AnimatedSprite::is_finished() const {
 	return !frames->get_animation_loop(animation) && (frame >= frames->get_frame_count(animation) - 1) && timeout <= 0;
 }
+// end anvilbear modifcation
 
 void AnimatedSprite::_reset_timeout() {
 
@@ -689,7 +695,11 @@ void AnimatedSprite::_bind_methods() {
 	ObjectTypeDB::bind_method(_MD("play","anim"),&AnimatedSprite::play,DEFVAL(StringName()));
 	ObjectTypeDB::bind_method(_MD("stop"),&AnimatedSprite::stop);
 	ObjectTypeDB::bind_method(_MD("is_playing"),&AnimatedSprite::is_playing);
+	
+	// begin anvilbear modification
+	ObjectTypeDB::bind_method(_MD("set_play_rate"), &AnimatedSprite::set_play_rate);
 	ObjectTypeDB::bind_method(_MD("is_finished"), &AnimatedSprite::is_finished);
+	// end anivilbear modification
 
 	ObjectTypeDB::bind_method(_MD("set_centered","centered"),&AnimatedSprite::set_centered);
 	ObjectTypeDB::bind_method(_MD("is_centered"),&AnimatedSprite::is_centered);
@@ -738,7 +748,7 @@ AnimatedSprite::AnimatedSprite() {
 	modulate=Color(1,1,1,1);
 	timeout=0;
 
-
+	play_rate = 1;
 }
 
 
