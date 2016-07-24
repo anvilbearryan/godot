@@ -160,6 +160,8 @@ public:
 	float play_rate;
 	void set_play_rate(float rate);
 	bool is_finished() const;
+
+	virtual void adjust_offset(Point2& in_offset, const Size2i& ref_size) const;
 	// end anvilbear modifcation
 
 	void set_animation(const StringName& p_animation);

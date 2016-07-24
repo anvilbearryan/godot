@@ -84,6 +84,9 @@ void Sprite::_notification(int p_what) {
 			}
 
 			Point2 ofs=offset;
+
+			adjust_offset(ofs, s);
+
 			if (centered)
 				ofs-=s/2;
 			if (OS::get_singleton()->get_use_pixel_snap()) {
@@ -128,6 +131,13 @@ Ref<Texture> Sprite::get_texture() const {
 
 	return texture;
 }
+
+// begin anvilbear modifcation
+void Sprite::adjust_offset(Point2& in_offset, const Size2& ref_size) const {
+	if (centered)
+		in_offset -= ref_size / 2;
+}
+// end anvilbear modifcation
 
 void Sprite::set_centered(bool p_center) {
 
@@ -279,8 +289,8 @@ Rect2 Sprite::get_item_rect() const {
 	}
 
 	Point2 ofs=offset;
-	if (centered)
-		ofs-=s/2;
+
+	adjust_offset(ofs, s);
 
 	if (s==Size2(0,0))
 		s=Size2(1,1);

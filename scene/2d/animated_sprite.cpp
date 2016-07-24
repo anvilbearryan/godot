@@ -423,8 +423,8 @@ void AnimatedSprite::_notification(int p_what) {
 			Size2i s;
 			s = texture->get_size();
 			Point2 ofs=offset;
-			if (centered)
-				ofs-=s/2;
+
+			adjust_offset(ofs, s);
 
 			if (OS::get_singleton()->get_use_pixel_snap()) {
 				ofs=ofs.floor();
@@ -579,8 +579,8 @@ Rect2 AnimatedSprite::get_item_rect() const {
 	Size2i s = t->get_size();
 
 	Point2 ofs=offset;
-	if (centered)
-		ofs-=s/2;
+	
+	adjust_offset(ofs, s);
 
 	if (s==Size2(0,0))
 		s=Size2(1,1);
@@ -634,6 +634,11 @@ void AnimatedSprite::set_play_rate(float rate) {
 
 bool AnimatedSprite::is_finished() const {
 	return !frames->get_animation_loop(animation) && (frame >= frames->get_frame_count(animation) - 1) && timeout <= 0;
+}
+
+void AnimatedSprite::adjust_offset(Point2& in_offset, const Size2i& ref_size) const {
+	if (centered)
+		in_offset -= ref_size / 2;
 }
 // end anvilbear modifcation
 

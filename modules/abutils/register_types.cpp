@@ -29,11 +29,15 @@
 #include "register_types.h"
 #include "object_type_db.h"
 #include "arrow_2d.h"
+#include "anchored_sprite.h"
+#include "anchored_animated_sprite.h"
 #include "abmath.h"
 #include "one_way_tile_map.h"
 
 void register_abutils_types() {
 	ObjectTypeDB::register_type<Arrow2D>();
+	ObjectTypeDB::register_type<AnchoredSprite>();
+	ObjectTypeDB::register_type<AnchoredAnimatedSprite>();
 	ObjectTypeDB::register_type<ABMath>();
 	ObjectTypeDB::register_type<OneWayTileMap>();
 }

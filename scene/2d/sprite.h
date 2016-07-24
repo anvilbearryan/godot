@@ -72,6 +72,10 @@ public:
 	void set_texture(const Ref<Texture>& p_texture);
 	Ref<Texture> get_texture() const;
 
+	// begin anvilbear modifcation
+	virtual void adjust_offset(Point2& in_offset, const Size2& ref_size) const;
+	// end anvilbear modifcation
+
 	void set_centered(bool p_center);
 	bool is_centered() const;
 
