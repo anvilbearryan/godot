@@ -56,14 +56,14 @@ Size2 AnchoredContainer::get_minimum_size() const {
 }
 
 
-void AnchoredContainer::set_anchor(int p_anchor) {
+void AnchoredContainer::set_anchored_to(int p_anchor) {
 
 	anchor=p_anchor;
 	queue_sort();
 
 }
 
-int AnchoredContainer::get_anchor() const {
+int AnchoredContainer::get_anchored_to() const {
 
 	return anchor;
 }
@@ -94,7 +94,7 @@ void AnchoredContainer::_notification(int p_what) {
 			// Begin custom
 			Point2 ofs = Point2();
 			ofs.y = -(2 - (anchor - 1) / 3) * size.y / 2;
-			ofs.x = -((anchor - 1) % 3) * size.x / 2;
+			ofs.x = ((anchor - 1) % 3) * size.x / 2;
 			// bound adjust, want a function s.t. 5 gives 0.5,0.5
 			if (!bounded) {
 				ofs = ofs - (minsize*0.5).floor();
@@ -111,13 +111,13 @@ void AnchoredContainer::_notification(int p_what) {
 
 void AnchoredContainer::_bind_methods() {
 
-	ObjectTypeDB::bind_method(_MD("set_anchor","anchor"),&AnchoredContainer::set_anchor);
-	ObjectTypeDB::bind_method(_MD("get_anchor"),&AnchoredContainer::get_anchor);
+	ObjectTypeDB::bind_method(_MD("set_anchored_to","anchored_to"),&AnchoredContainer::set_anchored_to);
+	ObjectTypeDB::bind_method(_MD("get_anchored_to"),&AnchoredContainer::get_anchored_to);
 
 	ObjectTypeDB::bind_method(_MD("set_bounded", "enable_bound"), &AnchoredContainer::set_bounded);
 	ObjectTypeDB::bind_method(_MD("is_bounded"), &AnchoredContainer::is_bounded);
 
-	ADD_PROPERTYNZ(PropertyInfo(Variant::INT, "anchor"), _SCS("set_anchor"), _SCS("get_anchor"));
+	ADD_PROPERTYNZ(PropertyInfo(Variant::INT, "anchored_to"), _SCS("set_anchored_to"), _SCS("get_anchored_to"));
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "bounded"), _SCS("set_bounded"), _SCS("is_bounded"));
 }
 

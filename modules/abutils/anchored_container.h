@@ -44,8 +44,8 @@ protected:
 	static void _bind_methods();
 public:
 
-	void set_anchor(int anchor);
-	int get_anchor() const;
+	void set_anchored_to(int p_anchor);
+	int get_anchored_to() const;
 
 	void set_bounded(bool p_bounded);
 	bool is_bounded() const;
