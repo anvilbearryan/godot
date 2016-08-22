@@ -1,5 +1,5 @@
 /*************************************************************************/
-/*  register_types.cpp                                                   */
+/*  anchored_container.h                                                   */
 /*************************************************************************/
 /*                       This file is part of:                           */
 /*                           GODOT ENGINE                                */
@@ -26,24 +26,33 @@
 /* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE     */
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
-#include "register_types.h"
-#include "object_type_db.h"
-#include "arrow_2d.h"
-#include "anchored_container.h"
-#include "anchored_sprite.h"
-#include "anchored_animated_sprite.h"
-#include "abmath.h"
-#include "one_way_tile_map.h"
+#ifndef Anchored_CONTAINER_H
+#define Anchored_CONTAINER_H
 
-void register_abutils_types() {
-	ObjectTypeDB::register_type<Arrow2D>();
-	ObjectTypeDB::register_type<AnchoredContainer>();
-	ObjectTypeDB::register_type<AnchoredSprite>();
-	ObjectTypeDB::register_type<AnchoredAnimatedSprite>();
-	ObjectTypeDB::register_type<ABMath>();
-	ObjectTypeDB::register_type<OneWayTileMap>();
-}
 
-void unregister_abutils_types() {
+#include "scene/gui/container.h"
 
-}
+class AnchoredContainer : public Container {
+
+	OBJ_TYPE( AnchoredContainer, Container );
+
+	int anchor;
+	bool bounded;
+protected:
+
+	void _notification(int p_what);
+	static void _bind_methods();
+public:
+
+	void set_anchor(int anchor);
+	int get_anchor() const;
+
+	void set_bounded(bool p_bounded);
+	bool is_bounded() const;
+
+	virtual Size2 get_minimum_size() const;
+
+	AnchoredContainer();
+};
+
+#endif // Anchored_CONTAINER_H
