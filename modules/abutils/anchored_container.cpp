@@ -93,7 +93,8 @@ void AnchoredContainer::_notification(int p_what) {
 			Size2 minsize = c->get_combined_minimum_size();
 			// Begin custom
 			Point2 ofs = Point2();
-			ofs.y = -(2 - (anchor - 1) / 3) * size.y / 2;
+			//ofs.y = (2 - (anchor - 1) / 3) * size.y / 2;
+			ofs.y = (2 - (anchor - 1) / 3) * size.y / 2;
 			ofs.x = ((anchor - 1) % 3) * size.x / 2;
 			// bound adjust, want a function s.t. 5 gives 0.5,0.5
 			if (!bounded) {
