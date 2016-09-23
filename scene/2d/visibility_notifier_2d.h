@@ -39,20 +39,30 @@ class VisibilityNotifier2D : public Node2D {
 	Set<Viewport*> viewports;
 
 	Rect2 rect;
-
+	
+	// begin anvilbear modification
+	bool _entered_screen;
+	// end anvilbear modification
 protected:
 friend class SpatialIndexer2D;
 
 	void _enter_viewport(Viewport* p_viewport);
 	void _exit_viewport(Viewport* p_viewport);
 
-
 	virtual void _screen_enter() {}
 	virtual void _screen_exit() {}
 
 	void _notification(int p_what);
 	static void _bind_methods();
+
 public:
+
+	// begin anvilbear modification
+	bool b_exact;
+	void set_exact(bool p_exact);
+	bool is_exact() const;
+	void enter_screen();
+	// end anvilbear modification
 
 	void set_rect(const Rect2& p_rect);
 	Rect2 get_rect() const;

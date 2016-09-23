@@ -292,6 +292,15 @@ struct SpatialIndexer2D {
 							} else {
 								H->get()=pass;
 							}
+
+							// begin anvilbear modification
+							if (H->key()->is_exact() && !H->key()->is_on_screen()) {
+								// full AABB check
+								if (E->get().rect.intersects(H->key()->get_global_transform().xform(H->key()->get_rect()))) {
+									H->key()->enter_screen();
+								}
+							}
+							// end anvilbear modification
 						}
 					}
 				}

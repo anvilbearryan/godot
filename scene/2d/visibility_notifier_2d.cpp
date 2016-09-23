@@ -63,7 +63,7 @@ void VisibilityNotifier2D::_exit_viewport(Viewport* p_viewport){
 	emit_signal(SceneStringNames::get_singleton()->exit_viewport,p_viewport);
 	if (viewports.size()==0) {
 		emit_signal(SceneStringNames::get_singleton()->exit_screen);
-
+		_entered_screen = false;
 		_screen_exit();
 	}
 }
@@ -123,8 +123,26 @@ void VisibilityNotifier2D::_notification(int p_what) {
 }
 
 bool VisibilityNotifier2D::is_on_screen() const {
+	// if we care for exact, entered_screen must be true too
+	if (b_exact){
+		return _entered_screen && viewports.size() > 0;
+	}
+	else {
+		return viewports.size() > 0;
+	}
+}
 
-	return viewports.size()>0;
+void VisibilityNotifier2D::set_exact(bool p_exact) {
+	if (p_exact == b_exact)
+		return;
+	b_exact = p_exact;
+}
+bool VisibilityNotifier2D::is_exact() const {
+	return b_exact;
+}
+void VisibilityNotifier2D::enter_screen() {
+	_entered_screen = true;
+	emit_signal("enter_screen_exact");
 }
 
 void VisibilityNotifier2D::_bind_methods(){
@@ -139,12 +157,23 @@ void VisibilityNotifier2D::_bind_methods(){
 	ADD_SIGNAL( MethodInfo("exit_viewport",PropertyInfo(Variant::OBJECT,"viewport",PROPERTY_HINT_RESOURCE_TYPE,"Viewport")) );
 	ADD_SIGNAL( MethodInfo("enter_screen"));
 	ADD_SIGNAL( MethodInfo("exit_screen"));
-}
 
+	// begin anvilbear modification
+	ObjectTypeDB::bind_method(_MD("set_exact", "exact"), &VisibilityNotifier2D::set_exact);
+	ObjectTypeDB::bind_method(_MD("is_exact"), &VisibilityNotifier2D::is_exact);
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "exact"), _SCS("set_exact"), _SCS("is_exact"));
+	ADD_SIGNAL(MethodInfo("enter_screen_exact"));
+	// end anvilbear modification
+}
 
 VisibilityNotifier2D::VisibilityNotifier2D() {
 
 	rect=Rect2(-10,-10,20,20);
+
+	// begin anvilbear modification
+	b_exact = false;
+	_entered_screen = false;
+	// end anvilbear modification
 }
 
 
