@@ -159,6 +159,10 @@ private:
 
 	Array _get_nodes_in_group(const StringName& p_group);
 
+	// begin anvilbear modification
+	Node* _get_group_leader(const StringName& p_group);
+	// end anvilbear modification
+
 	Node *current_scene;
 
 	Color debug_collisions_color;

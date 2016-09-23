@@ -522,6 +522,7 @@ bool SceneTree::iteration(float p_time) {
 	emit_signal("fixed_frame");
 
 	_notify_group_pause("fixed_process",Node::NOTIFICATION_FIXED_PROCESS);
+	
 	_flush_ugc();
 	_flush_transform_notifications();
 	call_group(GROUP_CALL_REALTIME,"_viewports","update_worlds");
@@ -949,6 +950,48 @@ void SceneTree::_notify_group_pause(const StringName& p_group,int p_notification
 		call_skip.clear();
 }
 
+// begin anvilbear modification
+/* 
+void SceneTree::_propagate_notify_group_unpause(const StringName& p_group, int p_notification) {
+
+	Map<StringName, Group>::Element *E = group_map.find(p_group);
+	if (!E)
+		return;
+	Group &g = E->get();
+	if (g.nodes.empty())
+		return;
+
+
+	_update_group_order(g);
+
+	//copy, so copy on write happens in case something is removed from process while being called
+	//performance is not lost because only if something is added/removed the vector is copied.
+	Vector<Node*> nodes_copy = g.nodes;
+
+	int node_count = nodes_copy.size();
+	Node **nodes = &nodes_copy[0];
+
+	call_lock++;
+
+	for (int i = 0;i < node_count;i++) {
+
+		Node *n = nodes[i];
+		if (call_lock && call_skip.has(n))
+			continue;
+
+		if (n->can_process())
+			continue;
+
+		n->propagate_notification(p_notification);
+	}
+
+	call_lock--;
+	if (call_lock == 0)
+		call_skip.clear();
+}
+*/ 
+//end anvilbear modification
+
 /*
 void SceneMainLoop::_update_listener_2d() {
 
@@ -1019,6 +1062,22 @@ Array SceneTree::_get_nodes_in_group(const StringName& p_group) {
 
 	return ret;
 }
+
+// begin anvilbear modification
+Node* SceneTree::_get_group_leader(const StringName& p_group) {
+	
+	Map<StringName, Group>::Element *E = group_map.find(p_group);
+	if (!E)
+		return NULL;
+
+	_update_group_order(E->get()); //update order just in case
+	int nc = E->get().nodes.size();
+	if (nc == 0)
+		return NULL;
+
+	return E->get().nodes.ptr()[0];
+}
+// end anvilbear modification
 
 bool SceneTree::has_group(const StringName& p_identifier) const {
 
@@ -2159,6 +2218,10 @@ void SceneTree::_bind_methods() {
 	ObjectTypeDB::bind_method(_MD("set_group","call_flags","group","property","value"),&SceneTree::set_group);
 
 	ObjectTypeDB::bind_method(_MD("get_nodes_in_group","group"),&SceneTree::_get_nodes_in_group);
+
+	// begin anvilbear modification
+	ObjectTypeDB::bind_method(_MD("get_group_leader", "group"), &SceneTree::_get_group_leader);
+	// end anvilbear modification
 
 	ObjectTypeDB::bind_method(_MD("get_root:Viewport"),&SceneTree::get_root);
 	ObjectTypeDB::bind_method(_MD("has_group","name"),&SceneTree::has_group);

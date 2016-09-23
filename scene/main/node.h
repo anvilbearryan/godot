@@ -116,6 +116,11 @@ private:
 		List<Node*> owned;
 
 		PauseMode pause_mode;
+		
+		// begin anvilbear modification
+		PauseMode force_process_pause_cache;
+		// end anvilbear modification
+
 		Node *pause_owner;
 
 		NetworkMode network_mode;
@@ -335,6 +340,11 @@ public:
 	static Vector<Variant> make_binds(VARIANT_ARG_LIST);
 
 	void replace_by(Node* p_node,bool p_keep_data=false);
+
+	// begin anvilbear modification
+	void start_forced_process();
+	void end_forced_process();
+	// end anvilbear modification
 
 	void set_pause_mode(PauseMode p_mode);
 	PauseMode get_pause_mode() const;

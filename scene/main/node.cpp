@@ -396,6 +396,23 @@ void Node::set_fixed_process(bool p_process) {
 	data.fixed_process=p_process;
 	_change_notify("fixed_process");
 }
+// begin anvilbear modification
+void Node::start_forced_process(){
+	if (get_pause_mode() == PAUSE_MODE_PROCESS)
+		return;
+	data.force_process_pause_cache = get_pause_mode();
+	set_pause_mode(PAUSE_MODE_PROCESS);
+}
+void Node::end_forced_process() {
+	if (get_pause_mode() != PAUSE_MODE_PROCESS)
+		return;
+	// revert to previous condition
+	set_pause_mode(data.force_process_pause_cache);
+	
+	// this is simply a cache, we don't read from it for begining so its left as is
+	//data.force_process_pause_cache = PAUSE_MODE_STOP;
+}
+// end anvilbear modification
 
 void Node::set_pause_mode(PauseMode p_mode) {
 
@@ -2868,6 +2885,11 @@ void Node::_bind_methods() {
 	ObjectTypeDB::bind_method(_MD("is_processing_unhandled_input"),&Node::is_processing_unhandled_input);
 	ObjectTypeDB::bind_method(_MD("set_process_unhandled_key_input","enable"),&Node::set_process_unhandled_key_input);
 	ObjectTypeDB::bind_method(_MD("is_processing_unhandled_key_input"),&Node::is_processing_unhandled_key_input);
+	
+	// begin anvilbear modification
+	ObjectTypeDB::bind_method(_MD("start_forced_process"), &Node::start_forced_process);
+	ObjectTypeDB::bind_method(_MD("end_forced_process"), &Node::end_forced_process);
+	// end anvilbear modification
 	ObjectTypeDB::bind_method(_MD("set_pause_mode","mode"),&Node::set_pause_mode);
 	ObjectTypeDB::bind_method(_MD("get_pause_mode"),&Node::get_pause_mode);
 	ObjectTypeDB::bind_method(_MD("can_process"),&Node::can_process);
