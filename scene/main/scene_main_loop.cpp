@@ -950,48 +950,6 @@ void SceneTree::_notify_group_pause(const StringName& p_group,int p_notification
 		call_skip.clear();
 }
 
-// begin anvilbear modification
-/* 
-void SceneTree::_propagate_notify_group_unpause(const StringName& p_group, int p_notification) {
-
-	Map<StringName, Group>::Element *E = group_map.find(p_group);
-	if (!E)
-		return;
-	Group &g = E->get();
-	if (g.nodes.empty())
-		return;
-
-
-	_update_group_order(g);
-
-	//copy, so copy on write happens in case something is removed from process while being called
-	//performance is not lost because only if something is added/removed the vector is copied.
-	Vector<Node*> nodes_copy = g.nodes;
-
-	int node_count = nodes_copy.size();
-	Node **nodes = &nodes_copy[0];
-
-	call_lock++;
-
-	for (int i = 0;i < node_count;i++) {
-
-		Node *n = nodes[i];
-		if (call_lock && call_skip.has(n))
-			continue;
-
-		if (n->can_process())
-			continue;
-
-		n->propagate_notification(p_notification);
-	}
-
-	call_lock--;
-	if (call_lock == 0)
-		call_skip.clear();
-}
-*/ 
-//end anvilbear modification
-
 /*
 void SceneMainLoop::_update_listener_2d() {
 

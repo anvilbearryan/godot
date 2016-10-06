@@ -242,7 +242,8 @@ public:
 	int get_child_count() const;
 	Node *get_child(int p_index) const;
 	// Begin anvilbear modification
-	Node *get_last_child() const;
+	Node* get_last_child() const;
+	Node* _get_manager(const StringName& p_group) const;
 	// End anvilbear modification
 	bool has_node(const NodePath& p_path) const;
 	Node *get_node(const NodePath& p_path) const;

@@ -1536,9 +1536,12 @@ Node *Node::get_child(int p_index) const {
 	return data.children[p_index];
 }
 // Begin anvilbear modification
-Node *Node::get_last_child() const {
+Node* Node::get_last_child() const {
 
 	return get_child(get_child_count() - 1);
+}
+Node* Node::_get_manager(const StringName& p_group) const {
+	return data.inside_tree ? data.tree->_get_group_leader(p_group) : NULL;
 }
 // End anvilbear modification
 Node *Node::_get_child_by_name(const StringName& p_name) const {
@@ -2889,6 +2892,7 @@ void Node::_bind_methods() {
 	// begin anvilbear modification
 	ObjectTypeDB::bind_method(_MD("start_forced_process"), &Node::start_forced_process);
 	ObjectTypeDB::bind_method(_MD("end_forced_process"), &Node::end_forced_process);
+	ObjectTypeDB::bind_method(_MD("get_manager", "group"), &Node::_get_manager);
 	// end anvilbear modification
 	ObjectTypeDB::bind_method(_MD("set_pause_mode","mode"),&Node::set_pause_mode);
 	ObjectTypeDB::bind_method(_MD("get_pause_mode"),&Node::get_pause_mode);

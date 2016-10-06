@@ -290,7 +290,20 @@ struct SpatialIndexer2D {
 								H=E->get().notifiers.insert(G->key(),pass);
 								added.push_back(G->key());
 							} else {
-								H->get()=pass;
+								// begin anvilbear modification
+
+								// before we let H, the visibility notifier to have their uint64 value be pass, 
+								// we check if they are really still on screen instead of the naive check above.
+								if (H->key()->is_exact()) {
+									if (E->get().rect.intersects(H->key()->get_global_transform().xform(H->key()->get_rect()))) {
+										H->get() = pass;
+									}
+								}
+								else{
+								
+								// end anvilbear modification
+									H->get() = pass;
+								}
 							}
 
 							// begin anvilbear modification
