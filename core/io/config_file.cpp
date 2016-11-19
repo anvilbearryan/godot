@@ -85,9 +85,11 @@ void ConfigFile::set_value(const String& p_section, const String& p_key, const V
 
 }
 Variant ConfigFile::get_value(const String& p_section, const String& p_key, Variant p_default) const {
-
-	ERR_FAIL_COND_V(!values.has(p_section),p_default);
-	ERR_FAIL_COND_V(!values[p_section].has(p_key),p_default);
+	if (!values.has(p_section)) return p_default;
+	if (!values[p_section].has(p_key)) return p_default;
+	// mutes error
+	//ERR_FAIL_COND_V(!values.has(p_section),p_default);
+	//ERR_FAIL_COND_V(!values[p_section].has(p_key),p_default);
 	return values[p_section][p_key];
 
 }
