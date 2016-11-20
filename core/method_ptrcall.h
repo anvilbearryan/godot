@@ -69,6 +69,7 @@ MAKE_PTRARGR(double,float);
 
 MAKE_PTRARG(String);
 MAKE_PTRARG(Vector2);
+MAKE_PTRARG(Point2i);
 MAKE_PTRARG(Rect2);
 MAKE_PTRARG(Vector3);
 MAKE_PTRARG(Matrix32);
@@ -179,6 +180,7 @@ MAKE_VECARG(uint8_t);
 MAKE_VECARG(int);
 MAKE_VECARG(float);
 MAKE_VECARG(Vector2);
+MAKE_VECARG(Point2i);
 MAKE_VECARG(Vector3);
 MAKE_VECARG(Color);
 

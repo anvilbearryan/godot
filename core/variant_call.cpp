@@ -348,6 +348,8 @@ static void _call_##m_type##_##m_method(Variant& r_ret,Variant& p_self,const Var
 	VCALL_LOCALMEM0R(Vector2,abs);
 	VCALL_LOCALMEM1R(Vector2,clamped);
 
+	VCALL_LOCALMEM1R(Point2i, dot);
+
 	VCALL_LOCALMEM0R(Rect2,get_area);
 	VCALL_LOCALMEM1R(Rect2,intersects);
 	VCALL_LOCALMEM1R(Rect2,encloses);
@@ -792,6 +794,12 @@ static void _call_##m_type##_##m_method(Variant& r_ret,Variant& p_self,const Var
 		r_ret=Vector2(*p_args[0],*p_args[1]);
 	}
 
+	static void Point2i_init1(Variant& r_ret, const Variant** p_args) {
+
+		r_ret = Point2i(*p_args[0], *p_args[1]);
+	}
+
+
 	static void Rect2_init1(Variant& r_ret,const Variant** p_args) {
 
 		r_ret=Rect2(*p_args[0],*p_args[1]);
@@ -1050,31 +1058,33 @@ Variant Variant::construct(const Variant::Type p_type, const Variant** p_args, i
 			// math types
 
 			case VECTOR2: return Vector2();		// 5
+			case POINT2I: return Point2i();
 			case RECT2: return Rect2();
 			case VECTOR3: return Vector3();
 			case MATRIX32: return Matrix32();
 			case PLANE: return Plane();
-			case QUAT: return Quat();
-			case _AABB: return AABB(); //sorry naming convention fail :( not like it's used often // 10
+			case QUAT: return Quat();			// 10
+			case _AABB: return AABB(); //sorry naming convention fail :( not like it's used often
 			case MATRIX3: return Matrix3();
 			case TRANSFORM: return Transform();
 
 			// misc types
 			case COLOR: return Color();
-			case IMAGE: return Image();;
-			case NODE_PATH: return NodePath();;		// 15
+			case IMAGE: return Image();;		// 15
+			case NODE_PATH: return NodePath();;		
 			case _RID: return RID();;
 			case OBJECT: return (Object*)NULL;
 			case INPUT_EVENT: return InputEvent();;
-			case DICTIONARY: return Dictionary();;
-			case ARRAY: return Array();;			// 20
+			case DICTIONARY: return Dictionary();;	// 20
+			case ARRAY: return Array();;			
 			case RAW_ARRAY: return ByteArray();;
 			case INT_ARRAY: return IntArray();;
 			case REAL_ARRAY: return RealArray();;
-			case STRING_ARRAY: return StringArray();;
-			case VECTOR2_ARRAY: return Vector2Array();; 	// 25
-			case VECTOR3_ARRAY: return Vector3Array();; 	// 25
+			case STRING_ARRAY: return StringArray();;	// 25
+			case VECTOR2_ARRAY: return Vector2Array();; 	
+			case VECTOR3_ARRAY: return Vector3Array();; 
 			case COLOR_ARRAY: return ColorArray();;
+			
 			default: return Variant();
 		}
 
@@ -1119,31 +1129,32 @@ Variant Variant::construct(const Variant::Type p_type, const Variant** p_args, i
 			case REAL: { return real_t(*p_args[0]); }
 			case STRING: { return String(*p_args[0]); }
 			case VECTOR2: { return Vector2(*p_args[0]); }
+			case POINT2I: {return Point2i(*p_args[0]); }
 			case RECT2: return (Rect2(*p_args[0]));
 			case VECTOR3: return (Vector3(*p_args[0]));
 			case PLANE: return (Plane(*p_args[0]));
-			case QUAT: return (Quat(*p_args[0]));
-			case _AABB: return (AABB(*p_args[0])); //sorry naming convention fail :( not like it's used often // 10
+			case QUAT: return (Quat(*p_args[0]));	// 10
+			case _AABB: return (AABB(*p_args[0])); //sorry naming convention fail :( not like it's used often
 			case MATRIX3: return (Matrix3(p_args[0]->operator Matrix3()));
 			case TRANSFORM: return (Transform(p_args[0]->operator Transform()));
 
 			// misc types
 			case COLOR: return p_args[0]->type == Variant::STRING ? Color::html(*p_args[0]) : Color::hex(*p_args[0]);
-			case IMAGE: return (Image(*p_args[0]));
-			case NODE_PATH: return (NodePath(p_args[0]->operator NodePath()));		// 15
+			case IMAGE: return (Image(*p_args[0]));									// 15
+			case NODE_PATH: return (NodePath(p_args[0]->operator NodePath()));		
 			case _RID: return (RID(*p_args[0]));
 			case OBJECT: return ((Object*)(p_args[0]->operator Object *()));
 			case INPUT_EVENT: return (InputEvent(*p_args[0]));
-			case DICTIONARY: return p_args[0]->operator Dictionary();
+			case DICTIONARY: return p_args[0]->operator Dictionary();				// 20
 			case ARRAY: return p_args[0]->operator Array();
 
 			// arrays
 			case RAW_ARRAY: return (ByteArray(*p_args[0]));
 			case INT_ARRAY: return (IntArray(*p_args[0]));
 			case REAL_ARRAY: return (RealArray(*p_args[0]));
-			case STRING_ARRAY: return (StringArray(*p_args[0]));
-			case VECTOR2_ARRAY: return (Vector2Array(*p_args[0])); 	// 25
-			case VECTOR3_ARRAY: return (Vector3Array(*p_args[0])); 	// 25
+			case STRING_ARRAY: return (StringArray(*p_args[0]));	// 25
+			case VECTOR2_ARRAY: return (Vector2Array(*p_args[0])); 	
+			case VECTOR3_ARRAY: return (Vector3Array(*p_args[0])); 	
 			case COLOR_ARRAY: return (ColorArray(*p_args[0]));
 			default: return Variant();
 		}
@@ -1463,6 +1474,8 @@ _VariantCall::addfunc(Variant::m_vtype,Variant::m_ret,_SCS(#m_method),VCALL(m_cl
 	ADDFUNC0(VECTOR2,VECTOR2,Vector2,abs,varray());
 	ADDFUNC1(VECTOR2,VECTOR2,Vector2,clamped,REAL,"length",varray());
 
+	ADDFUNC1(POINT2I, INT, Point2i, dot, POINT2I, "with", varray());
+
 	ADDFUNC0(RECT2,REAL,Rect2,get_area,varray());
 	ADDFUNC1(RECT2,BOOL,Rect2,intersects,RECT2,"b",varray());
 	ADDFUNC1(RECT2,BOOL,Rect2,encloses,RECT2,"b",varray());
@@ -1745,6 +1758,8 @@ _VariantCall::addfunc(Variant::m_vtype,Variant::m_ret,_SCS(#m_method),VCALL(m_cl
 	/* REGISTER CONSTRUCTORS */
 
 	_VariantCall::add_constructor(_VariantCall::Vector2_init1,Variant::VECTOR2,"x",Variant::REAL,"y",Variant::REAL);
+
+	_VariantCall::add_constructor(_VariantCall::Point2i_init1, Variant::POINT2I, "x", Variant::INT, "y", Variant::INT);
 
 	_VariantCall::add_constructor(_VariantCall::Rect2_init1,Variant::RECT2,"pos",Variant::VECTOR2,"size",Variant::VECTOR2);
 	_VariantCall::add_constructor(_VariantCall::Rect2_init2,Variant::RECT2,"x",Variant::REAL,"y",Variant::REAL,"width",Variant::REAL,"height",Variant::REAL);

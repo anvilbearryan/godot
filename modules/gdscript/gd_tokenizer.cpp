@@ -784,6 +784,7 @@ void GDTokenizerText::_advance() {
 							{Variant::REAL,"float"},
 							{Variant::STRING,"String"},
 							{Variant::VECTOR2,"Vector2"},
+							{Variant::POINT2I,"Point2i" },
 							{Variant::RECT2,"Rect2"},
 							{Variant::MATRIX32,"Matrix32"},
 							{Variant::VECTOR3,"Vector3"},

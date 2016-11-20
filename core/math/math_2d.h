@@ -407,6 +407,8 @@ struct Point2i {
 	bool operator==(const Point2i& p_vec2) const;
 	bool operator!=(const Point2i& p_vec2) const;
 
+	int dot(const Point2i& p_vec2) const { return x * p_vec2.x + y * p_vec2.y; }
+
 	float get_aspect() const { return width/(float)height; }
 
 	operator String() const { return String::num(x)+", "+String::num(y); }

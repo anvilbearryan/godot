@@ -510,35 +510,36 @@ static _GlobalConstant _global_constants[]={
 	{"TYPE_REAL",Variant::REAL},
 	{"TYPE_STRING",Variant::STRING},
 	{"TYPE_VECTOR2",Variant::VECTOR2},		// 5
+	{"TYPE_POINT2I",Variant::POINT2I },	
 	{"TYPE_RECT2",Variant::RECT2},
 	{"TYPE_VECTOR3",Variant::VECTOR3},
 	{"TYPE_MATRIX32",Variant::MATRIX32},
-	{"TYPE_PLANE",Variant::PLANE},
-	{"TYPE_QUAT",Variant::QUAT},			// 10
+	{"TYPE_PLANE",Variant::PLANE},			// 10
+	{"TYPE_QUAT",Variant::QUAT},			
 	{"TYPE_AABB",Variant::_AABB}, //sorry naming convention fail :( not like it's used often
 	{"TYPE_MATRIX3",Variant::MATRIX3},
 	{"TYPE_TRANSFORM",Variant::TRANSFORM},
-	{"TYPE_COLOR",Variant::COLOR},
-	{"TYPE_IMAGE",Variant::IMAGE},			// 15
+	{"TYPE_COLOR",Variant::COLOR},			// 15
+	{"TYPE_IMAGE",Variant::IMAGE},			
 	{"TYPE_NODE_PATH",Variant::NODE_PATH},
 	{"TYPE_RID",Variant::_RID},
 	{"TYPE_OBJECT",Variant::OBJECT},
-	{"TYPE_INPUT_EVENT",Variant::INPUT_EVENT},
-	{"TYPE_DICTIONARY",Variant::DICTIONARY},		// 20
+	{"TYPE_INPUT_EVENT",Variant::INPUT_EVENT},		// 20
+	{"TYPE_DICTIONARY",Variant::DICTIONARY},		
 	{"TYPE_ARRAY",Variant::ARRAY},
 	{"TYPE_RAW_ARRAY",Variant::RAW_ARRAY},
 	{"TYPE_INT_ARRAY",Variant::INT_ARRAY},
-	{"TYPE_REAL_ARRAY",Variant::REAL_ARRAY},
-	{"TYPE_STRING_ARRAY",Variant::STRING_ARRAY},	// 25
+	{"TYPE_REAL_ARRAY",Variant::REAL_ARRAY},		// 25
+	{"TYPE_STRING_ARRAY",Variant::STRING_ARRAY},	
 	{"TYPE_VECTOR2_ARRAY",Variant::VECTOR2_ARRAY},
 	{"TYPE_VECTOR3_ARRAY",Variant::VECTOR3_ARRAY},
 	{"TYPE_COLOR_ARRAY",Variant::COLOR_ARRAY},
 	{"TYPE_MAX",Variant::VARIANT_MAX},
 	// begin anvilbear modification
-	{ "DIRECTION_UP", 8},
+	{ "DIRECTION_UP", 1},
 	{ "DIRECTION_DOWN", 2},
 	{ "DIRECTION_LEFT", 4},
-	{ "DIRECTION_RIGHT", 6},
+	{ "DIRECTION_RIGHT", 8},
 	// end anvilbear modification
 	{NULL,0}
 

@@ -46,6 +46,7 @@ bool Variant::booleanize(bool &r_valid) const {
 		case REAL: return _data._real;
 		case STRING: return (*reinterpret_cast<const String*>(_data._mem))!="";
 		case VECTOR2:
+		case POINT2I:
 		case RECT2:
 		case MATRIX32:
 		case VECTOR3:
@@ -110,6 +111,7 @@ case m_name: {\
 		case INT: _RETURN( p_a._data.m_type m_op p_b._data._int);\
 		case REAL: _RETURN( p_a._data.m_type m_op p_b._data._real);\
 		case VECTOR2: _RETURN( p_a._data.m_type m_op *reinterpret_cast<const Vector2*>(p_b._data._mem));\
+		case POINT2I: _RETURN( p_a._data.m_type m_op *reinterpret_cast<const Point2i*>(p_b._data._mem));\
 		case VECTOR3: _RETURN( p_a._data.m_type m_op *reinterpret_cast<const Vector3*>(p_b._data._mem));\
 		default: {}\
 	}\
@@ -261,6 +263,7 @@ void Variant::evaluate(const Operator& p_op, const Variant& p_a, const Variant& 
 				DEFAULT_OP_NUM(==,REAL,_real);
 				DEFAULT_OP_STR(==,STRING,String);
 				DEFAULT_OP_LOCALMEM(==,VECTOR2,Vector2);
+				DEFAULT_OP_LOCALMEM(== , POINT2I, Point2i);
 				DEFAULT_OP_LOCALMEM(==,RECT2,Rect2);
 				DEFAULT_OP_PTRREF(==,MATRIX32,_matrix32);
 				DEFAULT_OP_LOCALMEM(==,VECTOR3,Vector3);
@@ -353,6 +356,7 @@ void Variant::evaluate(const Operator& p_op, const Variant& p_a, const Variant& 
 				DEFAULT_OP_NUM(<,REAL,_real);
 				DEFAULT_OP_STR(<,STRING,String);
 				DEFAULT_OP_LOCALMEM(<,VECTOR2,Vector2);
+				DEFAULT_OP_LOCALMEM(<, POINT2I, Point2i);
 				DEFAULT_OP_FAIL(RECT2);
 				DEFAULT_OP_FAIL(MATRIX32);
 				DEFAULT_OP_LOCALMEM(<,VECTOR3,Vector3);
@@ -483,6 +487,7 @@ void Variant::evaluate(const Operator& p_op, const Variant& p_a, const Variant& 
 					DEFAULT_OP_NUM(+,REAL,_real);
 					DEFAULT_OP_STR(+,STRING,String);
 					DEFAULT_OP_LOCALMEM(+,VECTOR2,Vector2);
+					DEFAULT_OP_LOCALMEM(+, POINT2I, Point2i);
 					DEFAULT_OP_FAIL(RECT2);
 					DEFAULT_OP_FAIL(MATRIX32);
 					DEFAULT_OP_LOCALMEM(+,VECTOR3,Vector3);
@@ -541,6 +546,7 @@ void Variant::evaluate(const Operator& p_op, const Variant& p_a, const Variant& 
 				DEFAULT_OP_NUM(-,REAL,_real);
 				DEFAULT_OP_FAIL(STRING);
 				DEFAULT_OP_LOCALMEM(-,VECTOR2,Vector2);
+				DEFAULT_OP_LOCALMEM(-, POINT2I, Point2i);
 				DEFAULT_OP_FAIL(RECT2);
 				DEFAULT_OP_FAIL(MATRIX32);
 				DEFAULT_OP_LOCALMEM(-,VECTOR3,Vector3);
@@ -582,6 +588,7 @@ void Variant::evaluate(const Operator& p_op, const Variant& p_a, const Variant& 
 				DEFAULT_OP_NUM_VEC(*,REAL,_real);
 				DEFAULT_OP_FAIL(STRING);
 				DEFAULT_OP_LOCALMEM_NUM(*,VECTOR2,Vector2);
+				DEFAULT_OP_LOCALMEM_NUM(*, POINT2I, Point2i);
 				DEFAULT_OP_FAIL(RECT2);
 				case MATRIX32: {
 
@@ -711,6 +718,7 @@ void Variant::evaluate(const Operator& p_op, const Variant& p_a, const Variant& 
 				DEFAULT_OP_NUM(/,REAL,_real);
 				DEFAULT_OP_FAIL(STRING);
 				DEFAULT_OP_LOCALMEM_NUM(/,VECTOR2,Vector2);
+				DEFAULT_OP_LOCALMEM_NUM(/ , POINT2I, Point2i);
 				DEFAULT_OP_FAIL(RECT2);
 				DEFAULT_OP_FAIL(MATRIX32);
 				DEFAULT_OP_LOCALMEM_NUM(/,VECTOR3,Vector3);
@@ -801,6 +809,7 @@ void Variant::evaluate(const Operator& p_op, const Variant& p_a, const Variant& 
 					DEFAULT_OP_NUM_NEG(REAL,_real);
 					DEFAULT_OP_FAIL(STRING);
 					DEFAULT_OP_LOCALMEM_NEG(VECTOR2,Vector2);
+					DEFAULT_OP_LOCALMEM_NEG(POINT2I, Point2i);
 					DEFAULT_OP_FAIL(RECT2);
 					DEFAULT_OP_FAIL(MATRIX32);
 					DEFAULT_OP_LOCALMEM_NEG(VECTOR3,Vector3);
@@ -1132,6 +1141,45 @@ void Variant::set(const Variant& p_index, const Variant& p_value, bool *r_valid)
 			}
 
 		} break;		// 5
+
+		case POINT2I: {
+
+			if (p_value.type != Variant::INT && p_value.type != Variant::REAL)
+				return;
+
+			if (p_index.get_type() == Variant::INT || p_index.get_type() == Variant::REAL) {
+				// scalar index
+				int idx = p_index;
+
+				if (idx<0)
+					idx += 2;
+				if (idx >= 0 && idx<2) {
+
+					Point2i *v = reinterpret_cast<Point2i*>(_data._mem);
+					valid = true;
+					(*v)[idx] = p_value;
+					return;
+				}
+			}
+			else if (p_index.get_type() == Variant::STRING) {
+				//scalar name
+
+				const String *str = reinterpret_cast<const String*>(p_index._data._mem);
+				Point2i *v = reinterpret_cast<Point2i*>(_data._mem);
+				if (*str == "x" || *str == "width") {
+					valid = true;
+					v->x = p_value;
+					return;
+				}
+				else if (*str == "y" || *str == "height") {
+					valid = true;
+					v->y = p_value;
+					return;
+				}
+			}
+
+		} break;
+
 		case RECT2: {
 
 			if (p_value.type!=Variant::VECTOR2)
@@ -1304,7 +1352,7 @@ void Variant::set(const Variant& p_index, const Variant& p_value, bool *r_valid)
 				}
 			}
 
-		} break;
+		} break;	   // 10
 		case _AABB: {
 
 			if (p_value.type!=Variant::VECTOR3)
@@ -1330,7 +1378,7 @@ void Variant::set(const Variant& p_index, const Variant& p_value, bool *r_valid)
 					return;
 				}
 			}
-		} break; //sorry naming convention fail :( not like it's used often // 10
+		} break; //sorry naming convention fail :( not like it's used often 
 		case MATRIX3: {
 
 			if (p_value.type!=Variant::VECTOR3)
@@ -1483,8 +1531,8 @@ void Variant::set(const Variant& p_index, const Variant& p_value, bool *r_valid)
 
 		} break;
 		case IMAGE: {	} break;
-		case NODE_PATH: {    } break;		// 15
-		case _RID: {    } break;
+		case NODE_PATH: {    } break;		
+		case _RID: {    } break;	// 15
 		case OBJECT: {
 
 			Object  *obj=_get_obj().obj;
@@ -1878,19 +1926,19 @@ void Variant::set(const Variant& p_index, const Variant& p_value, bool *r_valid)
 				}
 			}
 
-		} break;
+		} break;	  // 20
 		case DICTIONARY: {
 
 			Dictionary *dic=reinterpret_cast<Dictionary*>(_data._mem);
 			dic->operator [](p_index)=p_value;
 			valid=true; //always valid, i guess? should this really be ok?
 			return;
-		} break;		// 20
+		} break;		
 		DEFAULT_OP_ARRAY_CMD(ARRAY, Array, ;, (*arr)[index]=p_value;return)
 		DEFAULT_OP_DVECTOR_SET(RAW_ARRAY, uint8_t, p_value.type != Variant::REAL && p_value.type != Variant::INT)
 		DEFAULT_OP_DVECTOR_SET(INT_ARRAY, int, p_value.type != Variant::REAL && p_value.type != Variant::INT)
-		DEFAULT_OP_DVECTOR_SET(REAL_ARRAY, real_t, p_value.type != Variant::REAL && p_value.type != Variant::INT)
-		DEFAULT_OP_DVECTOR_SET(STRING_ARRAY, String, p_value.type != Variant::STRING) // 25
+		DEFAULT_OP_DVECTOR_SET(REAL_ARRAY, real_t, p_value.type != Variant::REAL && p_value.type != Variant::INT)	// 25
+		DEFAULT_OP_DVECTOR_SET(STRING_ARRAY, String, p_value.type != Variant::STRING) 
 		DEFAULT_OP_DVECTOR_SET(VECTOR2_ARRAY, Vector2, p_value.type != Variant::VECTOR2)
 		DEFAULT_OP_DVECTOR_SET(VECTOR3_ARRAY, Vector3, p_value.type != Variant::VECTOR3)
 		DEFAULT_OP_DVECTOR_SET(COLOR_ARRAY, Color, p_value.type != Variant::COLOR)
@@ -1957,6 +2005,38 @@ Variant Variant::get(const Variant& p_index, bool *r_valid) const {
 			}
 
 		} break;		// 5
+
+		case POINT2I: {
+
+			if (p_index.get_type() == Variant::INT || p_index.get_type() == Variant::REAL) {
+				// scalar index
+				int idx = p_index;
+				if (idx<0)
+					idx += 2;
+				if (idx >= 0 && idx<2) {
+
+					const Point2i *v = reinterpret_cast<const Point2i*>(_data._mem);
+					valid = true;
+					return (*v)[idx];
+				}
+			}
+			else if (p_index.get_type() == Variant::STRING) {
+				//scalar name
+
+				const String *str = reinterpret_cast<const String*>(p_index._data._mem);
+				const Point2i *v = reinterpret_cast<const Point2i*>(_data._mem);
+				if (*str == "x" || *str == "width") {
+					valid = true;
+					return v->x;
+				}
+				else if (*str == "y" || *str == "height") {
+					valid = true;
+					return v->y;
+				}
+			}
+
+		} break;
+
 		case RECT2: {
 
 			if (p_index.get_type()==Variant::STRING) {
@@ -2085,7 +2165,7 @@ Variant Variant::get(const Variant& p_index, bool *r_valid) const {
 				}
 			}
 
-		} break;
+		} break;		// 10
 		case _AABB: {
 
 			if (p_index.get_type()==Variant::STRING) {
@@ -2104,7 +2184,7 @@ Variant Variant::get(const Variant& p_index, bool *r_valid) const {
 					return v->size+v->pos;
 				}
 			}
-		} break; //sorry naming convention fail :( not like it's used often // 10
+		} break; //sorry naming convention fail :( not like it's used often 
 		case MATRIX3: {
 
 			if (p_index.get_type()==Variant::INT || p_index.get_type()==Variant::REAL) {
@@ -2217,8 +2297,8 @@ Variant Variant::get(const Variant& p_index, bool *r_valid) const {
 
 
 		} break;
-		case IMAGE: {	} break;
-		case NODE_PATH: {    } break;		// 15
+		case IMAGE: {	} break;			// 15
+		case NODE_PATH: {    } break;		
 		case _RID: {    } break;
 		case OBJECT: {
 			Object *obj = _get_obj().obj;
@@ -2460,7 +2540,7 @@ Variant Variant::get(const Variant& p_index, bool *r_valid) const {
 				}
 			}
 
-		} break;
+		} break;			// 20
 		case DICTIONARY: {
 
 			const Dictionary *dic=reinterpret_cast<const Dictionary*>(_data._mem);
@@ -2469,7 +2549,7 @@ Variant Variant::get(const Variant& p_index, bool *r_valid) const {
 				valid=true;
 				return *res;
 			}
-		} break;		// 20
+		} break;		
 		DEFAULT_OP_ARRAY_CMD(ARRAY, const Array, ;, return (*arr)[index])
 		DEFAULT_OP_DVECTOR_GET(RAW_ARRAY, uint8_t)
 		DEFAULT_OP_DVECTOR_GET(INT_ARRAY, int)
@@ -2715,6 +2795,14 @@ void Variant::get_property_list(List<PropertyInfo> *p_list) const {
 			p_list->push_back( PropertyInfo(Variant::REAL,"height"));
 
 		} break;		// 5
+		case POINT2I: {
+
+			p_list->push_back(PropertyInfo(Variant::INT, "x"));
+			p_list->push_back(PropertyInfo(Variant::INT, "y"));
+			p_list->push_back(PropertyInfo(Variant::INT, "width"));
+			p_list->push_back(PropertyInfo(Variant::INT, "height"));
+
+		} break;
 		case RECT2: {
 
 			p_list->push_back( PropertyInfo(Variant::VECTOR2,"pos"));
@@ -3368,6 +3456,7 @@ void Variant::blend(const Variant& a, const Variant& b, float c, Variant &r_dst)
 			r_dst=ra + rb * c;
 		} return;
 		case VECTOR2:{ r_dst=*reinterpret_cast<const Vector2*>(a._data._mem)+*reinterpret_cast<const Vector2*>(b._data._mem)*c; } return;
+		case POINT2I: { r_dst = *reinterpret_cast<const Point2i*>(a._data._mem) + *reinterpret_cast<const Point2i*>(b._data._mem)*c; } return;
 		case RECT2:{
 					   const Rect2 *ra = reinterpret_cast<const Rect2*>(a._data._mem);
 					   const Rect2 *rb = reinterpret_cast<const Rect2*>(b._data._mem);
@@ -3474,6 +3563,7 @@ void Variant::interpolate(const Variant& a, const Variant& b, float c,Variant &r
 
 		} return;
 		case VECTOR2:{  r_dst=reinterpret_cast<const Vector2*>(a._data._mem)->linear_interpolate(*reinterpret_cast<const Vector2*>(b._data._mem),c);      } return;
+		//case POINT2I: {  r_dst = reinterpret_cast<const Point2i*>(a._data._mem)->linear_interpolate(*reinterpret_cast<const Vector2*>(b._data._mem), c);      } return;
 		case RECT2:{  r_dst = Rect2( reinterpret_cast<const Rect2*>(a._data._mem)->pos.linear_interpolate(reinterpret_cast<const Rect2*>(b._data._mem)->pos,c), reinterpret_cast<const Rect2*>(a._data._mem)->size.linear_interpolate(reinterpret_cast<const Rect2*>(b._data._mem)->size,c) );     } return;
 		case VECTOR3:{  r_dst=reinterpret_cast<const Vector3*>(a._data._mem)->linear_interpolate(*reinterpret_cast<const Vector3*>(b._data._mem),c);     } return;
 		case MATRIX32:{  r_dst=a._data._matrix32->interpolate_with(*b._data._matrix32,c);     } return;

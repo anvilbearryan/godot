@@ -70,6 +70,12 @@ String Variant::get_type_name(Variant::Type p_type) {
 
 			return "Vector2";
 		} break;
+
+		case POINT2I: {
+
+			return "Point2i";
+		} break;
+
 		case RECT2: {
 
 			return "Rect2";
@@ -754,6 +760,14 @@ bool Variant::is_zero() const {
 			return *reinterpret_cast<const Vector2*>(_data._mem)==Vector2();
 
 		} break;
+
+		case POINT2I: {
+
+			return *reinterpret_cast<const Point2i*>(_data._mem) == Point2i();
+
+		} break;
+
+
 		case RECT2: {
 
 			return *reinterpret_cast<const Rect2*>(_data._mem)==Rect2();
@@ -910,6 +924,11 @@ bool Variant::is_one() const {
 			return *reinterpret_cast<const Vector2*>(_data._mem)==Vector2(1,1);
 
 		} break;
+		case POINT2I: {
+
+			return *reinterpret_cast<const Point2i*>(_data._mem) == Point2i(1, 1);
+
+		} break;
 		case RECT2: {
 
 			return *reinterpret_cast<const Rect2*>(_data._mem)==Rect2(1,1,1,1);
@@ -980,6 +999,11 @@ void Variant::reference(const Variant& p_variant) {
 		case VECTOR2: {
 
 			memnew_placement( _data._mem, Vector2( *reinterpret_cast<const Vector2*>(p_variant._data._mem) ) );
+
+		} break;
+		case POINT2I: {
+
+			memnew_placement(_data._mem, Point2i(*reinterpret_cast<const Point2i*>(p_variant._data._mem)));
 
 		} break;
 		case RECT2: {
@@ -1115,6 +1139,7 @@ void Variant::zero() {
 		case INT: this->_data._int = 0; break;
 		case REAL: this->_data._real = 0; break;
 		case VECTOR2: *reinterpret_cast<Vector2*>(this->_data._mem) = Vector2(); break;
+		case POINT2I: *reinterpret_cast<Point2i*>(this->_data._mem) = Point2i(); break;
 		case RECT2: *reinterpret_cast<Rect2*>(this->_data._mem) = Rect2(); break;
 		case VECTOR3: *reinterpret_cast<Vector3*>(this->_data._mem) = Vector3(); break;
 		case PLANE: *reinterpret_cast<Plane*>(this->_data._mem) = Plane(); break;
@@ -1508,6 +1533,7 @@ Variant::operator String() const {
 		case REAL: return String::num(_data._real);
 		case STRING: return *reinterpret_cast<const String*>(_data._mem);
 		case VECTOR2: return "("+operator Vector2()+")";
+		case POINT2I: return "(" + operator Point2i() + ")";
 		case RECT2: return "("+operator Rect2()+")";
 		case MATRIX32: {
 
@@ -1686,6 +1712,16 @@ Variant::operator Vector2() const {
 		return Vector2(reinterpret_cast<const Vector3*>(_data._mem)->x,reinterpret_cast<const Vector3*>(_data._mem)->y);
 	else
 		return Vector2();
+
+}
+Variant::operator Point2i() const {
+
+	if (type == POINT2I)
+		return *reinterpret_cast<const Point2i*>(_data._mem);
+	else if (type == VECTOR2)
+		return Point2i((int)(reinterpret_cast<const Vector2*>(_data._mem)->x), ((int)reinterpret_cast<const Vector2*>(_data._mem)->y));
+	else
+		return Point2i();
 
 }
 Variant::operator Rect2() const {
@@ -2004,6 +2040,23 @@ Variant::operator Vector<Vector2>() const {
 	}
 	return to;
 }
+/*
+Variant::operator Vector<Point2i>() const {
+
+	DVector<Point2i> from = operator DVector<Point2i>();
+	Vector<Point2i> to;
+	int len = from.size();
+	if (len == 0)
+		return Vector<Point2i>();
+	to.resize(len);
+	DVector<Point2i>::Read r = from.read();
+	Point2i *w = &to[0];
+	for (int i = 0;i<len;i++) {
+
+		w[i] = r[i];
+	}
+	return to;
+}*/
 
 Variant::operator DVector<Plane>() const {
 
@@ -2307,6 +2360,13 @@ Variant::Variant(const Vector2& p_vector2) {
 	memnew_placement( _data._mem, Vector2( p_vector2 ) );
 
 }
+Variant::Variant(const Point2i& p_point2i) {
+
+	type = POINT2I;
+	memnew_placement(_data._mem, Point2i(p_point2i));
+
+}
+
 Variant::Variant(const Rect2& p_rect2) {
 
 	type=RECT2;
@@ -2479,7 +2539,23 @@ Variant::Variant(const Vector<Vector2>& p_array) {
 	}
 	*this=v;
 }
+/*
+Variant::Variant(const Vector<Point2i>& p_array) {
 
+
+	type = NIL;
+	DVector<Point2i> v;
+	int len = p_array.size();
+	if (len>0) {
+		v.resize(len);
+		DVector<Point2i>::Write w = v.write();
+		const Point2i *r = p_array.ptr();
+
+		for (int i = 0;i<len;i++)
+			w[i] = r[i];
+	}
+	*this = v;
+}*/
 
 Variant::Variant(const DVector<uint8_t>& p_raw_array) {
 
@@ -2693,6 +2769,12 @@ uint32_t Variant::hash() const {
 			uint32_t hash = hash_djb2_one_float(reinterpret_cast<const Vector2*>(_data._mem)->x);
 			return hash_djb2_one_float(reinterpret_cast<const Vector2*>(_data._mem)->y,hash);
 		} break;
+
+		case POINT2I: {
+			uint32_t hash = hash_djb2_one_32((uint32_t)reinterpret_cast<const Point2i*>(_data._mem)->x);
+			return hash_djb2_one_32((uint32_t)reinterpret_cast<const Point2i*>(_data._mem)->y, hash);
+		} break;
+
 		case RECT2: {
 
 			uint32_t hash = hash_djb2_one_float(reinterpret_cast<const Rect2*>(_data._mem)->pos.x);

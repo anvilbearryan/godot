@@ -87,30 +87,31 @@ public:
 		// math types
 
 		VECTOR2,		// 5
+		POINT2I,
 		RECT2,
 		VECTOR3,
 		MATRIX32,
-		PLANE,
-		QUAT,			// 10
+		PLANE,			// 10
+		QUAT,			
 		_AABB, //sorry naming convention fail :( not like it's used often
 		MATRIX3,
 		TRANSFORM,
 
 		// misc types
-		COLOR,
-		IMAGE,			// 15
+		COLOR,			// 15
+		IMAGE,			
 		NODE_PATH,
 		_RID,
 		OBJECT,
-		INPUT_EVENT,
-		DICTIONARY,		// 20
+		INPUT_EVENT,	// 20
+		DICTIONARY,		
 		ARRAY,
 
 		// arrays
 		RAW_ARRAY,
 		INT_ARRAY,
-		REAL_ARRAY,
-		STRING_ARRAY,	// 25
+		REAL_ARRAY,		// 25
+		STRING_ARRAY,	
 		VECTOR2_ARRAY,
 		VECTOR3_ARRAY,
 		COLOR_ARRAY,
@@ -205,6 +206,7 @@ public:
 	operator String() const;
 	operator StringName() const;
 	operator Vector2() const;
+	operator Point2i() const;
 	operator Rect2() const;
 	operator Vector3() const;
 	operator Plane() const;
@@ -246,6 +248,7 @@ public:
 	operator Vector<Color>() const;
 	operator Vector<RID>() const;
 	operator Vector<Vector2>() const;
+	//operator Vector<Point2i>() const;
 	operator DVector<Vector2>() const;
 	operator Vector<Plane>() const;
 
@@ -277,6 +280,7 @@ public:
 	Variant(const char * const p_cstring);
 	Variant(const CharType * p_wstring);
 	Variant(const Vector2& p_vector2);
+	Variant(const Point2i& p_point2i);
 	Variant(const Rect2& p_rect2);
 	Variant(const Vector3& p_vector3);
 	Variant(const Plane& p_plane);

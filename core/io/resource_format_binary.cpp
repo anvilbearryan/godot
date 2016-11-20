@@ -45,14 +45,15 @@ enum {
 	VARIANT_REAL=4,
 	VARIANT_STRING=5,
 	VARIANT_VECTOR2=10,
-	VARIANT_RECT2=11,
-	VARIANT_VECTOR3=12,
-	VARIANT_PLANE=13,
-	VARIANT_QUAT=14,
-	VARIANT_AABB=15,
-	VARIANT_MATRIX3=16,
-	VARIANT_TRANSFORM=17,
-	VARIANT_MATRIX32=18,
+	VARIANT_POINT2I = 11,
+	VARIANT_RECT2=12,
+	VARIANT_VECTOR3=13,
+	VARIANT_PLANE=14,
+	VARIANT_QUAT=15,
+	VARIANT_AABB=16,
+	VARIANT_MATRIX3=17,
+	VARIANT_TRANSFORM=18,
+	VARIANT_MATRIX32=19,
 	VARIANT_COLOR=20,
 	VARIANT_IMAGE=21,
 	VARIANT_NODE_PATH=22,
@@ -153,6 +154,14 @@ Error ResourceInteractiveLoaderBinary::parse_variant(Variant& r_v)  {
 			v.x=f->get_real();
 			v.y=f->get_real();
 			r_v=v;
+
+		} break;
+		case VARIANT_POINT2I: {
+
+			Point2i v;
+			v.x = f->get_32();
+			v.y = f->get_32();
+			r_v = v;
 
 		} break;
 		case VARIANT_RECT2: {
@@ -1479,6 +1488,14 @@ void ResourceFormatSaverBinaryInstance::write_variant(const Variant& p_property,
 			Vector2 val=p_property;
 			f->store_real(val.x);
 			f->store_real(val.y);
+
+		} break;
+		case Variant::POINT2I: {
+
+			f->store_32(VARIANT_POINT2I);
+			Point2i val = p_property;
+			f->store_32(val.x);
+			f->store_32(val.y);
 
 		} break;
 		case Variant::RECT2: {
