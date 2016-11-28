@@ -179,9 +179,6 @@ private:
 	Array get_used_cells() const;
 
 protected:
-	// begin anvilbear modification
-//	Map<PosKey, Quadrant>* get_quadrant_map() const;
-	// end anvilbear modification
 	void _notification(int p_what);
 	static void _bind_methods();
 
