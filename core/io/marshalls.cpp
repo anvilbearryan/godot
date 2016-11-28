@@ -717,6 +717,44 @@ Error decode_variant(Variant& r_variant,const uint8_t *p_buffer, int p_len,int *
 			r_variant=varray;
 
 		} break;
+		case Variant::POINT2I_ARRAY: {
+
+			ERR_FAIL_COND_V(len<4, ERR_INVALID_DATA);
+			uint32_t count = decode_uint32(buf);
+			ERR_FAIL_COND_V(count<0, ERR_INVALID_DATA);
+			buf += 4;
+			len -= 4;
+
+			ERR_FAIL_COND_V((int)count * 4 * 2>len, ERR_INVALID_DATA);
+			DVector<Point2i> varray;
+
+			if (r_len) {
+				(*r_len) += 4;
+			}
+
+			if (count) {
+				varray.resize(count);
+				DVector<Point2i>::Write w = varray.write();
+
+				for (int i = 0;i<(int)count;i++) {
+
+					w[i].x = decode_uint32(buf + i * 4 * 2 + 4 * 0);
+					w[i].y = decode_uint32(buf + i * 4 * 2 + 4 * 1);
+
+				}
+
+				int adv = 4 * 2 * count;
+
+				if (r_len)
+					(*r_len) += adv;
+				len -= adv;
+				buf += adv;
+
+			}
+
+			r_variant = varray;
+
+		} break;
 		case Variant::VECTOR3_ARRAY: {
 
 			ERR_FAIL_COND_V(len<4,ERR_INVALID_DATA);
@@ -1371,6 +1409,34 @@ Error encode_variant(const Variant& p_variant, uint8_t *r_buffer, int &r_len) {
 			}
 
 			r_len+=4*2*len;
+
+		} break;
+		case Variant::POINT2I_ARRAY: {
+
+			DVector<Point2i> data = p_variant;
+			int len = data.size();
+
+			if (buf) {
+				encode_uint32(len, buf);
+				buf += 4;
+			}
+
+			r_len += 4;
+
+			if (buf) {
+
+				for (int i = 0;i<len;i++) {
+
+					Point2i v = data.get(i);
+
+					encode_uint32(v.x, &buf[0]);
+					encode_uint32(v.y, &buf[4]);
+					buf += 4 * 2;
+
+				}
+			}
+
+			r_len += 4 * 2 * len;
 
 		} break;
 		case Variant::VECTOR3_ARRAY: {

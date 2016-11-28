@@ -68,6 +68,7 @@ typedef DVector<int> IntArray;
 typedef DVector<real_t> RealArray;
 typedef DVector<String> StringArray;
 typedef DVector<Vector2> Vector2Array;
+typedef DVector<Point2i> Point2iArray;
 typedef DVector<Vector3> Vector3Array;
 typedef DVector<Color> ColorArray;
 
@@ -113,10 +114,11 @@ public:
 		REAL_ARRAY,		// 25
 		STRING_ARRAY,	
 		VECTOR2_ARRAY,
+		POINT2I_ARRAY,
 		VECTOR3_ARRAY,
 		COLOR_ARRAY,
 
-		VARIANT_MAX
+		VARIANT_MAX		// 31
 
 	};
 
@@ -247,9 +249,10 @@ public:
 	operator Vector<Vector3>() const;
 	operator Vector<Color>() const;
 	operator Vector<RID>() const;
-	operator Vector<Vector2>() const;
-	//operator Vector<Point2i>() const;
+	operator Vector<Vector2>() const;	
 	operator DVector<Vector2>() const;
+	operator Vector<Point2i>() const;
+	operator DVector<Point2i>() const;
 	operator Vector<Plane>() const;
 
 	// some core type enums to convert to
@@ -320,6 +323,8 @@ public:
 	Variant(const Vector<RID>& p_array); // helper
 	Variant(const Vector<Vector2>& p_array); // helper
 	Variant(const DVector<Vector2>& p_array); // helper
+	Variant(const Vector<Point2i>& p_array); // helper
+	Variant(const DVector<Point2i>& p_array); // helper
 
 	Variant(const IP_Address& p_address);
 

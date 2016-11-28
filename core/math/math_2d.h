@@ -385,6 +385,9 @@ struct Point2i {
 		return p_idx?y:x;
 	}
 
+	_FORCE_INLINE_ static Point2i linear_interpolate(const Point2i& p_a, const Point2i& p_b, float p_t);
+	_FORCE_INLINE_ Point2i linear_interpolate(const Point2i& p_b, float p_t) const;
+
 	Point2i operator+(const Point2i& p_v) const;
 	void operator+=(const Point2i& p_v);
 	Point2i operator-(const Point2i& p_v) const;
@@ -408,6 +411,7 @@ struct Point2i {
 	bool operator!=(const Point2i& p_vec2) const;
 
 	int dot(const Point2i& p_vec2) const { return x * p_vec2.x + y * p_vec2.y; }
+	Point2i normalized() const;
 
 	float get_aspect() const { return width/(float)height; }
 
@@ -418,6 +422,27 @@ struct Point2i {
 	inline Point2i(int p_x,int p_y) { x=p_x; y=p_y; }
 	inline Point2i() { x=0; y=0; }
 };
+
+Point2i Point2i::linear_interpolate(const Point2i& p_b, float p_t) const {
+
+	Point2i res = *this;
+
+	res.x += (int)(p_t * (p_b.x - x));
+	res.y += (int)(p_t * (p_b.y - y));
+
+	return res;
+
+}
+
+Point2i Point2i::linear_interpolate(const Point2i& p_a, const Point2i& p_b, float p_t) {
+
+	Point2i res = p_a;
+
+	res.x += (int)(p_t * (p_b.x - p_a.x));
+	res.y += (int)(p_t * (p_b.y - p_a.y));
+
+	return res;
+}
 
 typedef Point2i Size2i;
 

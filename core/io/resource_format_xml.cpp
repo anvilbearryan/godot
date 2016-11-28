@@ -1151,7 +1151,104 @@ Error ResourceInteractiveLoaderXML::parse_property(Variant& r_v, String &r_name)
 
 		return OK;
 
-	} else if (type=="color_array") {
+	}
+	else if (type == "point2i_array") {
+
+		if (!tag->args.has("len")) {
+			ERR_EXPLAIN(local_path + ":" + itos(get_current_line()) + ": Array missing 'len' field: " + name);
+			ERR_FAIL_COND_V(!tag->args.has("len"), ERR_FILE_CORRUPT);
+		}
+		int len = tag->args["len"].to_int();;
+
+		DVector<Point2i> vectors;
+		vectors.resize(len);
+		DVector<Point2i>::Write w = vectors.write();
+		Point2i *vectorsptr = w.ptr();
+		int idx = 0;
+		int subidx = 0;
+		Point2i auxvec;
+		String str;
+
+		//		uint64_t tbegin = OS::get_singleton()->get_ticks_usec();
+#if 0
+		while (idx<len) {
+
+
+			CharType c = get_char();
+			ERR_FAIL_COND_V(f->eof_reached(), ERR_FILE_CORRUPT);
+
+
+			if (c<22 || c == ',' || c == '<') {
+
+				if (str.length()) {
+
+					auxvec[subidx] = str.to_int();
+					subidx++;
+					str = "";
+					if (subidx == 2) {
+						vectorsptr[idx] = auxvec;
+
+						idx++;
+						subidx = 0;
+					}
+				}
+
+				if (c == '<') {
+
+					while (get_char() != '>' && !f->eof_reached()) {}
+					ERR_FAIL_COND_V(f->eof_reached(), ERR_FILE_CORRUPT);
+					break;
+				}
+
+			}
+			else {
+
+				str += c;
+			}
+		}
+#else
+
+		Vector<char> tmpdata;
+
+		while (idx<len) {
+
+			bool end = false;
+			Error err = _parse_array_element(tmpdata, true, f, &end);
+			ERR_FAIL_COND_V(err, err);
+
+
+			auxvec[subidx] = String::to_int(&tmpdata[0]);
+			subidx++;
+			if (subidx == 2) {
+				vectorsptr[idx] = auxvec;
+
+				idx++;
+				subidx = 0;
+			}
+
+			if (end)
+				break;
+		}
+
+
+
+#endif
+		ERR_EXPLAIN(local_path + ":" + itos(get_current_line()) + ": Premature end of point2i array");
+		ERR_FAIL_COND_V(idx<len, ERR_FILE_CORRUPT);
+		//		double time_taken = (OS::get_singleton()->get_ticks_usec() - tbegin)/1000000.0;
+
+
+		w = DVector<Point2i>::Write();
+		r_v = vectors;
+		String sdfsdfg;
+		Error err = goto_end_of_tag();
+		ERR_FAIL_COND_V(err, err);
+		r_name = name;
+
+		return OK;
+
+	}
+	else if (type=="color_array") {
 
 		if (!tag->args.has("len")) {
 			ERR_EXPLAIN(local_path+":"+itos(get_current_line())+": Array missing 'len' field: "+name);
@@ -2269,6 +2366,7 @@ void ResourceFormatSaverXMLInstance::write_property(const String& p_name,const V
 		case Variant::REAL_ARRAY:	type="real_array"; params="len=\""+itos(p_property.operator DVector < real_t >().size())+"\""; break;
 		case Variant::STRING_ARRAY:	oneliner=false; type="string_array"; params="len=\""+itos(p_property.operator DVector < String >().size())+"\""; break;
 		case Variant::VECTOR2_ARRAY:	type="vector2_array"; params="len=\""+itos(p_property.operator DVector < Vector2 >().size())+"\""; break;
+		case Variant::POINT2I_ARRAY:	type = "point2i_array"; params = "len=\"" + itos(p_property.operator DVector < Point2i >().size()) + "\""; break;
 		case Variant::VECTOR3_ARRAY:	type="vector3_array"; params="len=\""+itos(p_property.operator DVector < Vector3 >().size())+"\""; break;
 		case Variant::COLOR_ARRAY:	type="color_array"; params="len=\""+itos(p_property.operator DVector < Color >().size())+"\""; break;
 		default: {
@@ -2588,6 +2686,25 @@ void ResourceFormatSaverXMLInstance::write_property(const String& p_name,const V
 					write_string(", ",false);
 				write_string(rtoss(ptr[i].x),false);
 				write_string(", "+rtoss(ptr[i].y),false);
+
+			}
+
+
+		} break;
+		case Variant::POINT2I_ARRAY: {
+
+			DVector<Point2i> data = p_property;
+			int len = data.size();
+			DVector<Point2i>::Read r = data.read();
+			const Point2i *ptr = r.ptr();;
+			write_tabs();
+
+			for (int i = 0;i<len;i++) {
+
+				if (i>0)
+					write_string(", ", false);
+				write_string(itos(ptr[i].x), false);
+				write_string(", " + itos(ptr[i].y), false);
 
 			}
 

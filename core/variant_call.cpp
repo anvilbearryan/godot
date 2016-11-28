@@ -349,6 +349,7 @@ static void _call_##m_type##_##m_method(Variant& r_ret,Variant& p_self,const Var
 	VCALL_LOCALMEM1R(Vector2,clamped);
 
 	VCALL_LOCALMEM1R(Point2i, dot);
+	VCALL_LOCALMEM0R(Point2i, normalized);
 
 	VCALL_LOCALMEM0R(Rect2,get_area);
 	VCALL_LOCALMEM1R(Rect2,intersects);
@@ -569,6 +570,17 @@ static void _call_##m_type##_##m_method(Variant& r_ret,Variant& p_self,const Var
 	VCALL_LOCALMEM1(Vector2Array,append);
 	VCALL_LOCALMEM1(Vector2Array,append_array);
 	VCALL_LOCALMEM0(Vector2Array,invert);
+
+	VCALL_LOCALMEM0R(Point2iArray, size);
+	VCALL_LOCALMEM2(Point2iArray, set);
+	VCALL_LOCALMEM1R(Point2iArray, get);
+	VCALL_LOCALMEM1(Point2iArray, push_back);
+	VCALL_LOCALMEM1(Point2iArray, resize);
+	VCALL_LOCALMEM2R(Point2iArray, insert);
+	VCALL_LOCALMEM1(Point2iArray, remove);
+	VCALL_LOCALMEM1(Point2iArray, append);
+	VCALL_LOCALMEM1(Point2iArray, append_array);
+	VCALL_LOCALMEM0(Point2iArray, invert);
 
 	VCALL_LOCALMEM0R(Vector3Array,size);
 	VCALL_LOCALMEM2(Vector3Array,set);
@@ -1082,6 +1094,7 @@ Variant Variant::construct(const Variant::Type p_type, const Variant** p_args, i
 			case REAL_ARRAY: return RealArray();;
 			case STRING_ARRAY: return StringArray();;	// 25
 			case VECTOR2_ARRAY: return Vector2Array();; 	
+			case POINT2I_ARRAY: return Point2iArray();;
 			case VECTOR3_ARRAY: return Vector3Array();; 
 			case COLOR_ARRAY: return ColorArray();;
 			
@@ -1154,6 +1167,7 @@ Variant Variant::construct(const Variant::Type p_type, const Variant** p_args, i
 			case REAL_ARRAY: return (RealArray(*p_args[0]));
 			case STRING_ARRAY: return (StringArray(*p_args[0]));	// 25
 			case VECTOR2_ARRAY: return (Vector2Array(*p_args[0])); 	
+			case POINT2I_ARRAY: return (Point2iArray(*p_args[0]));
 			case VECTOR3_ARRAY: return (Vector3Array(*p_args[0])); 	
 			case COLOR_ARRAY: return (ColorArray(*p_args[0]));
 			default: return Variant();
@@ -1475,6 +1489,7 @@ _VariantCall::addfunc(Variant::m_vtype,Variant::m_ret,_SCS(#m_method),VCALL(m_cl
 	ADDFUNC1(VECTOR2,VECTOR2,Vector2,clamped,REAL,"length",varray());
 
 	ADDFUNC1(POINT2I, INT, Point2i, dot, POINT2I, "with", varray());
+	ADDFUNC0(POINT2I, POINT2I, Point2i, normalized, varray());
 
 	ADDFUNC0(RECT2,REAL,Rect2,get_area,varray());
 	ADDFUNC1(RECT2,BOOL,Rect2,intersects,RECT2,"b",varray());
@@ -1659,6 +1674,16 @@ _VariantCall::addfunc(Variant::m_vtype,Variant::m_ret,_SCS(#m_method),VCALL(m_cl
 	ADDFUNC2(VECTOR2_ARRAY,INT,Vector2Array,insert,INT,"idx",VECTOR2,"vector2",varray());
 	ADDFUNC1(VECTOR2_ARRAY,NIL,Vector2Array,resize,INT,"idx",varray());
 	ADDFUNC0(VECTOR2_ARRAY,NIL,Vector2Array,invert,varray());
+
+	ADDFUNC0(POINT2I_ARRAY, INT, Point2iArray, size, varray());
+	ADDFUNC2(POINT2I_ARRAY, NIL, Point2iArray, set, INT, "idx", POINT2I, "point2i", varray());
+	ADDFUNC1(POINT2I_ARRAY, NIL, Point2iArray, push_back, POINT2I, "point2i", varray());
+	ADDFUNC1(POINT2I_ARRAY, NIL, Point2iArray, append, POINT2I, "point2i", varray());
+	ADDFUNC1(POINT2I_ARRAY, NIL, Point2iArray, append_array, POINT2I_ARRAY, "array", varray());
+	ADDFUNC1(POINT2I_ARRAY, NIL, Point2iArray, remove, INT, "idx", varray());
+	ADDFUNC2(POINT2I_ARRAY, INT, Point2iArray, insert, INT, "idx", POINT2I, "point2i", varray());
+	ADDFUNC1(POINT2I_ARRAY, NIL, Point2iArray, resize, INT, "idx", varray());
+	ADDFUNC0(POINT2I_ARRAY, NIL, Point2iArray, invert, varray());
 
 	ADDFUNC0(VECTOR3_ARRAY,INT,Vector3Array,size,varray());
 	ADDFUNC2(VECTOR3_ARRAY,NIL,Vector3Array,set,INT,"idx",VECTOR3,"vector3",varray());

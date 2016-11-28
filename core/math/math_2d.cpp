@@ -408,6 +408,16 @@ bool Point2i::operator!=(const Point2i& p_vec2) const {
 	return x!=p_vec2.x || y!=p_vec2.y;
 }
 
+Point2i Point2i::normalized() const {
+	if (y * ((y > 0) - (y < 0)) * 3 < 2 * x * ((x > 0) - (x < 0))) {
+		return Point2i((x > 0) - (x < 0), 0);
+	}
+	if (x * ((x > 0) - (x < 0)) * 3 < 2 * y * ((y > 0) - (y < 0))) {
+		return Point2i(0, (y > 0) - (y < 0));
+	}
+	return Point2i((x > 0) - (x < 0), (y > 0) - (y < 0));
+}
+
 void Matrix32::invert() {
 
 	SWAP(elements[0][1],elements[1][0]);

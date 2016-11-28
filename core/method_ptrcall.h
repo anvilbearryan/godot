@@ -90,6 +90,7 @@ MAKE_PTRARG(IntArray);
 MAKE_PTRARG(RealArray);
 MAKE_PTRARG(StringArray);
 MAKE_PTRARG(Vector2Array);
+MAKE_PTRARG(Point2iArray);
 MAKE_PTRARG(Vector3Array);
 MAKE_PTRARG(ColorArray);
 MAKE_PTRARG(Variant);

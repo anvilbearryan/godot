@@ -253,6 +253,7 @@ uint32_t PackedDataContainer::_pack(const Variant& p_data, Vector<uint8_t>& tmpd
 		case Variant::REAL_ARRAY:
 		case Variant::STRING_ARRAY:
 		case Variant::VECTOR2_ARRAY:
+		case Variant::POINT2I_ARRAY:
 		case Variant::VECTOR3_ARRAY:
 		case Variant::COLOR_ARRAY:
 		case Variant::NODE_PATH: {

@@ -68,6 +68,7 @@ bool Variant::booleanize(bool &r_valid) const {
 		case REAL_ARRAY:
 		case STRING_ARRAY:
 		case VECTOR2_ARRAY:
+		case POINT2I_ARRAY:
 		case VECTOR3_ARRAY:
 		case COLOR_ARRAY:
 			r_valid=false;
@@ -324,6 +325,7 @@ void Variant::evaluate(const Operator& p_op, const Variant& p_a, const Variant& 
 				DEFAULT_OP_ARRAY_EQ(REAL_ARRAY,real_t);
 				DEFAULT_OP_ARRAY_EQ(STRING_ARRAY,String);
 				DEFAULT_OP_ARRAY_EQ(VECTOR2_ARRAY,Vector3);
+				DEFAULT_OP_ARRAY_EQ(POINT2I_ARRAY, Point2i);
 				DEFAULT_OP_ARRAY_EQ(VECTOR3_ARRAY,Vector3);
 				DEFAULT_OP_ARRAY_EQ(COLOR_ARRAY,Color);
 
@@ -402,6 +404,7 @@ void Variant::evaluate(const Operator& p_op, const Variant& p_a, const Variant& 
 				DEFAULT_OP_ARRAY_LT(REAL_ARRAY,real_t);
 				DEFAULT_OP_ARRAY_LT(STRING_ARRAY,String);
 				DEFAULT_OP_ARRAY_LT(VECTOR2_ARRAY,Vector3);
+				DEFAULT_OP_ARRAY_LT(POINT2I_ARRAY, Point2i);
 				DEFAULT_OP_ARRAY_LT(VECTOR3_ARRAY,Vector3);
 				DEFAULT_OP_ARRAY_LT(COLOR_ARRAY,Color);
 				case VARIANT_MAX: {
@@ -449,6 +452,7 @@ void Variant::evaluate(const Operator& p_op, const Variant& p_a, const Variant& 
 				DEFAULT_OP_FAIL(REAL_ARRAY);
 				DEFAULT_OP_FAIL(STRING_ARRAY);
 				DEFAULT_OP_FAIL(VECTOR2_ARRAY);
+				DEFAULT_OP_FAIL(POINT2I_ARRAY);
 				DEFAULT_OP_FAIL(VECTOR3_ARRAY);
 				DEFAULT_OP_FAIL(COLOR_ARRAY);
 				case VARIANT_MAX: {
@@ -527,6 +531,7 @@ void Variant::evaluate(const Operator& p_op, const Variant& p_a, const Variant& 
 					DEFAULT_OP_ARRAY_ADD(REAL_ARRAY,real_t);
 					DEFAULT_OP_ARRAY_ADD(STRING_ARRAY,String);
 					DEFAULT_OP_ARRAY_ADD(VECTOR2_ARRAY,Vector2);
+					DEFAULT_OP_ARRAY_ADD(POINT2I_ARRAY, Point2i);
 					DEFAULT_OP_ARRAY_ADD(VECTOR3_ARRAY,Vector3);
 					DEFAULT_OP_ARRAY_ADD(COLOR_ARRAY,Color);
 					case VARIANT_MAX: {
@@ -569,6 +574,7 @@ void Variant::evaluate(const Operator& p_op, const Variant& p_a, const Variant& 
 				DEFAULT_OP_FAIL(REAL_ARRAY);
 				DEFAULT_OP_FAIL(STRING_ARRAY);
 				DEFAULT_OP_FAIL(VECTOR2_ARRAY);
+				DEFAULT_OP_FAIL(POINT2I_ARRAY);
 				DEFAULT_OP_FAIL(VECTOR3_ARRAY);
 				DEFAULT_OP_FAIL(COLOR_ARRAY);
 				case VARIANT_MAX: {
@@ -672,6 +678,7 @@ void Variant::evaluate(const Operator& p_op, const Variant& p_a, const Variant& 
 				DEFAULT_OP_FAIL(REAL_ARRAY);
 				DEFAULT_OP_FAIL(STRING_ARRAY);
 				DEFAULT_OP_FAIL(VECTOR2_ARRAY);
+				DEFAULT_OP_FAIL(POINT2I_ARRAY);
 				DEFAULT_OP_FAIL(VECTOR3_ARRAY);
 				DEFAULT_OP_FAIL(COLOR_ARRAY);
 				case VARIANT_MAX: {
@@ -747,6 +754,7 @@ void Variant::evaluate(const Operator& p_op, const Variant& p_a, const Variant& 
 				DEFAULT_OP_FAIL(REAL_ARRAY);
 				DEFAULT_OP_FAIL(STRING_ARRAY);
 				DEFAULT_OP_FAIL(VECTOR2_ARRAY);
+				DEFAULT_OP_FAIL(POINT2I_ARRAY);
 				DEFAULT_OP_FAIL(VECTOR3_ARRAY);
 				DEFAULT_OP_FAIL(COLOR_ARRAY);
 				case VARIANT_MAX: {
@@ -790,6 +798,7 @@ void Variant::evaluate(const Operator& p_op, const Variant& p_a, const Variant& 
 					DEFAULT_OP_FAIL(REAL_ARRAY);
 					DEFAULT_OP_FAIL(STRING_ARRAY);
 					DEFAULT_OP_FAIL(VECTOR2_ARRAY);
+					DEFAULT_OP_FAIL(POINT2I_ARRAY);
 					DEFAULT_OP_FAIL(VECTOR3_ARRAY);
 					DEFAULT_OP_FAIL(COLOR_ARRAY);
 					case VARIANT_MAX: {
@@ -832,6 +841,7 @@ void Variant::evaluate(const Operator& p_op, const Variant& p_a, const Variant& 
 					DEFAULT_OP_FAIL(REAL_ARRAY);
 					DEFAULT_OP_FAIL(STRING_ARRAY);
 					DEFAULT_OP_FAIL(VECTOR2_ARRAY);
+					DEFAULT_OP_FAIL(POINT2I_ARRAY);
 					DEFAULT_OP_FAIL(VECTOR3_ARRAY);
 					DEFAULT_OP_FAIL(COLOR_ARRAY);
 					case VARIANT_MAX: {
@@ -1940,6 +1950,7 @@ void Variant::set(const Variant& p_index, const Variant& p_value, bool *r_valid)
 		DEFAULT_OP_DVECTOR_SET(REAL_ARRAY, real_t, p_value.type != Variant::REAL && p_value.type != Variant::INT)	// 25
 		DEFAULT_OP_DVECTOR_SET(STRING_ARRAY, String, p_value.type != Variant::STRING) 
 		DEFAULT_OP_DVECTOR_SET(VECTOR2_ARRAY, Vector2, p_value.type != Variant::VECTOR2)
+		DEFAULT_OP_DVECTOR_SET(POINT2I_ARRAY, Point2i, p_value.type != Variant::POINT2I)
 		DEFAULT_OP_DVECTOR_SET(VECTOR3_ARRAY, Vector3, p_value.type != Variant::VECTOR3)
 		DEFAULT_OP_DVECTOR_SET(COLOR_ARRAY, Color, p_value.type != Variant::COLOR)
 		default: return;
@@ -2556,6 +2567,7 @@ Variant Variant::get(const Variant& p_index, bool *r_valid) const {
 		DEFAULT_OP_DVECTOR_GET(REAL_ARRAY, real_t)
 		DEFAULT_OP_DVECTOR_GET(STRING_ARRAY, String)
 		DEFAULT_OP_DVECTOR_GET(VECTOR2_ARRAY, Vector2)
+		DEFAULT_OP_DVECTOR_GET(POINT2I_ARRAY, Point2i)
 		DEFAULT_OP_DVECTOR_GET(VECTOR3_ARRAY, Vector3)
 		DEFAULT_OP_DVECTOR_GET(COLOR_ARRAY, Color)
 		default: return Variant();
@@ -2725,6 +2737,26 @@ bool Variant::in(const Variant& p_index, bool *r_valid) const {
 					DVector<Vector2>::Read r = arr->read();
 					for(int i=0;i<l;i++) {
 						if (r[i]==index)
+							return true;
+					}
+
+				}
+
+				return false;
+			}
+
+		} break;
+		case POINT2I_ARRAY: {
+			if (p_index.get_type() == Variant::POINT2I) {
+
+				Point2i index = p_index;
+				const DVector<Point2i> *arr = reinterpret_cast<const DVector<Point2i>* >(_data._mem);
+
+				int l = arr->size();
+				if (l) {
+					DVector<Point2i>::Read r = arr->read();
+					for (int i = 0;i<l;i++) {
+						if (r[i] == index)
 							return true;
 					}
 
@@ -3006,6 +3038,7 @@ void Variant::get_property_list(List<PropertyInfo> *p_list) const {
 		case INT_ARRAY:
 		case REAL_ARRAY:
 		case STRING_ARRAY:
+		case POINT2I_ARRAY:
 		case VECTOR3_ARRAY:
 		case COLOR_ARRAY: {
 
@@ -3116,6 +3149,14 @@ bool Variant::iter_init(Variant& r_iter,bool &valid) const {
 			if (arr->size()==0)
 				return false;
 			r_iter=0;
+			return true;
+		} break;
+		case POINT2I_ARRAY: {
+
+			const DVector<Point2i> *arr = reinterpret_cast<const DVector<Point2i>*>(_data._mem);
+			if (arr->size() == 0)
+				return false;
+			r_iter = 0;
 			return true;
 		} break;
 		case VECTOR3_ARRAY: {
@@ -3259,6 +3300,16 @@ bool Variant::iter_next(Variant& r_iter,bool &valid) const {
 			r_iter=idx;
 			return true;
 		} break;
+		case POINT2I_ARRAY: {
+
+			const DVector<Point2i> *arr = reinterpret_cast<const DVector<Point2i>*>(_data._mem);
+			int idx = r_iter;
+			idx++;
+			if (idx >= arr->size())
+				return false;
+			r_iter = idx;
+			return true;
+		} break;
 		case VECTOR3_ARRAY: {
 
 			const DVector<Vector3> *arr=reinterpret_cast<const DVector<Vector3>*>(_data._mem);
@@ -3396,6 +3447,18 @@ Variant Variant::iter_get(const Variant& r_iter,bool &r_valid) const {
 				return Variant();
 			}
 	#endif
+			return arr->get(idx);
+		} break;
+		case POINT2I_ARRAY: {
+
+			const DVector<Point2i> *arr = reinterpret_cast<const DVector<Point2i>*>(_data._mem);
+			int idx = r_iter;
+#ifdef DEBUG_ENABLED
+			if (idx<0 || idx >= arr->size()) {
+				r_valid = false;
+				return Variant();
+			}
+#endif
 			return arr->get(idx);
 		} break;
 		case VECTOR3_ARRAY: {
@@ -3563,7 +3626,7 @@ void Variant::interpolate(const Variant& a, const Variant& b, float c,Variant &r
 
 		} return;
 		case VECTOR2:{  r_dst=reinterpret_cast<const Vector2*>(a._data._mem)->linear_interpolate(*reinterpret_cast<const Vector2*>(b._data._mem),c);      } return;
-		//case POINT2I: {  r_dst = reinterpret_cast<const Point2i*>(a._data._mem)->linear_interpolate(*reinterpret_cast<const Vector2*>(b._data._mem), c);      } return;
+		case POINT2I: {  r_dst = reinterpret_cast<const Point2i*>(a._data._mem)->linear_interpolate(*reinterpret_cast<const Point2i*>(b._data._mem), c);      } return;
 		case RECT2:{  r_dst = Rect2( reinterpret_cast<const Rect2*>(a._data._mem)->pos.linear_interpolate(reinterpret_cast<const Rect2*>(b._data._mem)->pos,c), reinterpret_cast<const Rect2*>(a._data._mem)->size.linear_interpolate(reinterpret_cast<const Rect2*>(b._data._mem)->size,c) );     } return;
 		case VECTOR3:{  r_dst=reinterpret_cast<const Vector3*>(a._data._mem)->linear_interpolate(*reinterpret_cast<const Vector3*>(b._data._mem),c);     } return;
 		case MATRIX32:{  r_dst=a._data._matrix32->interpolate_with(*b._data._matrix32,c);     } return;
@@ -3605,6 +3668,33 @@ void Variant::interpolate(const Variant& a, const Variant& b, float c,Variant &r
 					}
 				}
 				r_dst=v;
+
+			}
+
+
+		} return;
+		case POINT2I_ARRAY: {
+			const DVector<Point2i> *arr_a = reinterpret_cast<const DVector<Point2i>* >(a._data._mem);
+			const DVector<Point2i> *arr_b = reinterpret_cast<const DVector<Point2i>* >(b._data._mem);
+			int sz = arr_a->size();
+			if (sz == 0 || arr_b->size() != sz) {
+
+				r_dst = a;
+			}
+			else {
+
+				DVector<Point2i> v;
+				v.resize(sz);
+				{
+					DVector<Point2i>::Write vw = v.write();
+					DVector<Point2i>::Read ar = arr_a->read();
+					DVector<Point2i>::Read br = arr_b->read();
+
+					for (int i = 0;i<sz;i++) {
+						vw[i] = ar[i].linear_interpolate(br[i], c);
+					}
+				}
+				r_dst = v;
 
 			}
 

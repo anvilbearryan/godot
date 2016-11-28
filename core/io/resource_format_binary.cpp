@@ -69,6 +69,7 @@ enum {
 	VARIANT_VECTOR3_ARRAY=35,
 	VARIANT_COLOR_ARRAY=36,
 	VARIANT_VECTOR2_ARRAY=37,
+	VARIANT_POINT2I_ARRAY = 38,
 
 	IMAGE_ENCODING_EMPTY=0,
 	IMAGE_ENCODING_RAW=1,
@@ -587,6 +588,28 @@ Error ResourceInteractiveLoaderBinary::parse_variant(Variant& r_v)  {
 			}
 			w=DVector<Vector2>::Write();
 			r_v=array;
+
+		} break;
+		case VARIANT_POINT2I_ARRAY: {
+
+			uint32_t len = f->get_32();
+
+			DVector<Point2i> array;
+			array.resize(len);
+			DVector<Point2i>::Write w = array.write();
+			f->get_buffer((uint8_t*)w.ptr(), len * 4 * 2);
+#ifdef BIG_ENDIAN_ENABLED
+			{
+				uint32_t *ptr = (uint32_t*)w.ptr();
+				for (int i = 0;i < len * 2;i++) {
+
+					ptr[i] = BSWAP32(ptr[i]);
+				}
+			}
+
+#endif
+			w = DVector<Point2i>::Write();
+			r_v = array;
 
 		} break;
 		case VARIANT_VECTOR3_ARRAY: {
@@ -1851,6 +1874,19 @@ void ResourceFormatSaverBinaryInstance::write_variant(const Variant& p_property,
 			for(int i=0;i<len;i++) {
 				f->store_real(r[i].x);
 				f->store_real(r[i].y);
+			}
+
+		} break;
+		case Variant::POINT2I_ARRAY: {
+
+			f->store_32(VARIANT_POINT2I_ARRAY);
+			DVector<Point2i> arr = p_property;
+			int len = arr.size();
+			f->store_32(len);
+			DVector<Point2i>::Read r = arr.read();
+			for (int i = 0;i<len;i++) {
+				f->store_32(r[i].x);
+				f->store_32(r[i].y);
 			}
 
 		} break;

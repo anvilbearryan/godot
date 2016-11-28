@@ -562,8 +562,9 @@ Error VariantParser::parse_value(Token& token,Variant &value,Stream *p_stream,in
 		REAL_ARRAY,
 		STRING_ARRAY,	// 25
 		VECTOR2_ARRAY,
+		POINT2I_ARRAY,
 		VECTOR3_ARRAY,
-		COLOR_ARRAY,
+		COLOR_ARRAY,	// 30
 
 		VARIANT_MAX
 
@@ -1307,7 +1308,30 @@ Error VariantParser::parse_value(Token& token,Variant &value,Stream *p_stream,in
 
 			return OK;
 
-		} else if (id=="Vector3Array") {
+		}
+		else if (id == "Point2iArray") {
+
+			Vector<float> args;
+			Error err = _parse_construct<float>(p_stream, args, line, r_err_str);
+			if (err)
+				return err;
+
+			DVector<Point2i> arr;
+			{
+				int len = args.size() / 2;
+				arr.resize(len);
+				DVector<Point2i>::Write w = arr.write();
+				for (int i = 0;i < len;i++) {
+					w[i] = Point2i(args[i * 2 + 0], args[i * 2 + 1]);
+				}
+			}
+
+			value = arr;
+
+			return OK;
+
+		}
+		else if (id == "Vector3Array") {
 
 			Vector<float> args;
 			Error err = _parse_construct<float>(p_stream,args,line,r_err_str);
@@ -1488,6 +1512,7 @@ Error VariantParser::parse_value(Token& token,Variant &value,Stream *p_stream,in
 				REAL_ARRAY,
 				STRING_ARRAY,	// 25
 				VECTOR2_ARRAY,
+				POINT2I_ARRAY,
 				VECTOR3_ARRAY,
 				COLOR_ARRAY,
 
@@ -2273,6 +2298,24 @@ Error VariantWriter::write(const Variant& p_variant, StoreStringFunc p_store_str
 			}
 
 			p_store_string_func(p_store_string_ud," )");
+
+		} break;
+		case Variant::POINT2I_ARRAY: {
+
+			p_store_string_func(p_store_string_ud, "Point2iArray( ");
+			DVector<Point2i> data = p_variant;
+			int len = data.size();
+			DVector<Point2i>::Read r = data.read();
+			const Point2i *ptr = r.ptr();;
+
+			for (int i = 0;i<len;i++) {
+
+				if (i>0)
+					p_store_string_func(p_store_string_ud, ", ");
+				p_store_string_func(p_store_string_ud, rtosfix(ptr[i].x) + ", " + rtosfix(ptr[i].y));
+			}
+
+			p_store_string_func(p_store_string_ud, " )");
 
 		} break;
 		case Variant::VECTOR3_ARRAY: {

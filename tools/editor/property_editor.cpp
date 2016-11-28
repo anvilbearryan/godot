@@ -3516,6 +3516,21 @@ void PropertyEditor::update_tree() {
 
 
 			} break;
+			case Variant::POINT2I_ARRAY: {
+
+				item->set_cell_mode(1, TreeItem::CELL_MODE_CUSTOM);
+				item->add_button(1, get_icon("EditResource", "EditorIcons"));
+
+				Variant v = obj->get(p.name);
+				if (v.is_array())
+					item->set_text(1, "Point2i[" + itos(v.call("size")) + "]");
+				else
+					item->set_text(1, "Point2i[]");
+				if (show_type_icons)
+					item->set_icon(0, get_icon("Point2i", "EditorIcons"));
+
+
+			} break;
 			case Variant::VECTOR3_ARRAY: {
 
 				item->set_cell_mode( 1, TreeItem::CELL_MODE_CUSTOM );
@@ -4145,7 +4160,7 @@ void PropertyEditor::_edit_button(Object *p_item, int p_column, int p_button) {
 			emit_signal("object_id_selected",obj->get(n));
 			print_line("OBJ ID SELECTED");
 
-		} else if (t==Variant::ARRAY || t==Variant::INT_ARRAY || t==Variant::REAL_ARRAY || t==Variant::STRING_ARRAY || t==Variant::VECTOR2_ARRAY || t==Variant::VECTOR3_ARRAY || t==Variant::COLOR_ARRAY || t==Variant::RAW_ARRAY) {
+		} else if (t==Variant::ARRAY || t==Variant::INT_ARRAY || t==Variant::REAL_ARRAY || t==Variant::STRING_ARRAY || t==Variant::VECTOR2_ARRAY || t == Variant::POINT2I_ARRAY || t==Variant::VECTOR3_ARRAY || t==Variant::COLOR_ARRAY || t==Variant::RAW_ARRAY) {
 
 			Variant v = obj->get(n);
 

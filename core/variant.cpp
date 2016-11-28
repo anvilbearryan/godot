@@ -183,6 +183,11 @@ String Variant::get_type_name(Variant::Type p_type) {
 			return "Vector2Array";
 
 		} break;
+		case POINT2I_ARRAY: {
+
+			return "Point2iArray";
+
+		} break;
 		case VECTOR3_ARRAY: {
 
 			return "Vector3Array";
@@ -353,6 +358,7 @@ bool Variant::can_convert(Variant::Type p_type_from,Variant::Type p_type_to) {
 				REAL_ARRAY,
 				COLOR_ARRAY,
 				VECTOR2_ARRAY,
+				POINT2I_ARRAY,
 				VECTOR3_ARRAY,
 				NIL
 			};
@@ -401,6 +407,15 @@ bool Variant::can_convert(Variant::Type p_type_from,Variant::Type p_type_to) {
 				NIL
 			};
 			valid_types=valid;
+
+		} break;
+		case POINT2I_ARRAY: {
+
+			static const Type valid[] = {
+				ARRAY,
+				NIL
+			};
+			valid_types = valid;
 
 		} break;
 		case VECTOR3_ARRAY: {
@@ -605,6 +620,7 @@ bool Variant::can_convert_strict(Variant::Type p_type_from,Variant::Type p_type_
 				REAL_ARRAY,
 				COLOR_ARRAY,
 				VECTOR2_ARRAY,
+				POINT2I_ARRAY,
 				VECTOR3_ARRAY,
 				NIL
 			};
@@ -653,6 +669,15 @@ bool Variant::can_convert_strict(Variant::Type p_type_from,Variant::Type p_type_
 				NIL
 			};
 			valid_types=valid;
+
+		} break;
+		case POINT2I_ARRAY: {
+
+			static const Type valid[] = {
+				ARRAY,
+				NIL
+			};
+			valid_types = valid;
 
 		} break;
 		case VECTOR3_ARRAY: {
@@ -877,6 +902,11 @@ bool Variant::is_zero() const {
 		case VECTOR2_ARRAY: {
 
 			return reinterpret_cast<const DVector<Vector2>*>(_data._mem)->size()==0;
+
+		} break;
+		case POINT2I_ARRAY: {
+
+			return reinterpret_cast<const DVector<Point2i>*>(_data._mem)->size() == 0;
 
 		} break;
 		case VECTOR3_ARRAY: {
@@ -1117,6 +1147,11 @@ void Variant::reference(const Variant& p_variant) {
 			memnew_placement( _data._mem, DVector<Vector2> ( *reinterpret_cast<const DVector<Vector2>*>(p_variant._data._mem) ) );
 
 		} break;
+		case POINT2I_ARRAY: {
+
+			memnew_placement(_data._mem, DVector<Point2i>(*reinterpret_cast<const DVector<Point2i>*>(p_variant._data._mem)));
+
+		} break;
 		case VECTOR3_ARRAY: {
 
 			memnew_placement( _data._mem, DVector<Vector3> ( *reinterpret_cast<const DVector<Vector3>*>(p_variant._data._mem) ) );
@@ -1244,6 +1279,11 @@ void Variant::clear() {
 		case VECTOR2_ARRAY: {
 
 			reinterpret_cast< DVector<Vector2>* >(_data._mem)->~DVector<Vector2>();
+
+		} break;
+		case POINT2I_ARRAY: {
+
+			reinterpret_cast< DVector<Point2i>* >(_data._mem)->~DVector<Point2i>();
 
 		} break;
 		case VECTOR3_ARRAY: {
@@ -1615,6 +1655,19 @@ Variant::operator String() const {
 			str += "]";
 			return str;
 		} break;
+		case POINT2I_ARRAY: {
+
+			DVector<Point2i> vec = operator DVector<Point2i>();
+			String str("[");
+			for (int i = 0;i<vec.size();i++) {
+
+				if (i>0)
+					str += ", ";
+				str = str + Variant(vec[i]);
+			}
+			str += "]";
+			return str;
+		} break;
 		case VECTOR3_ARRAY: {
 
 			DVector<Vector3> vec = operator DVector<Vector3>();
@@ -1710,6 +1763,8 @@ Variant::operator Vector2() const {
 		return *reinterpret_cast<const Vector2*>(_data._mem);
 	else if (type==VECTOR3)
 		return Vector2(reinterpret_cast<const Vector3*>(_data._mem)->x,reinterpret_cast<const Vector3*>(_data._mem)->y);
+	else if (type == POINT2I)
+		return Vector2(reinterpret_cast<const Point2i*>(_data._mem)->x, reinterpret_cast<const Point2i*>(_data._mem)->y);
 	else
 		return Vector2();
 
@@ -1934,6 +1989,7 @@ inline DA _convert_array_from_variant(const Variant& p_variant) {
 		case Variant::REAL_ARRAY: { return _convert_array<DA,DVector<real_t> >( p_variant.operator DVector<real_t> () ); }
 		case Variant::STRING_ARRAY: { return _convert_array<DA,DVector<String> >( p_variant.operator DVector<String> () ); }
 		case Variant::VECTOR2_ARRAY: { return _convert_array<DA,DVector<Vector2> >( p_variant.operator DVector<Vector2> () ); }
+		case Variant::POINT2I_ARRAY: { return _convert_array<DA, DVector<Point2i> >(p_variant.operator DVector<Point2i>()); }
 		case Variant::VECTOR3_ARRAY: { return _convert_array<DA,DVector<Vector3> >( p_variant.operator DVector<Vector3> () ); }
 		case Variant::COLOR_ARRAY: { return _convert_array<DA,DVector<Color> >( p_variant.operator DVector<Color>() ); }
 		default: { return DA(); }
@@ -2001,7 +2057,15 @@ Variant::operator DVector<Vector2>() const {
 
 
 }
+Variant::operator DVector<Point2i>() const {
 
+	if (type == POINT2I_ARRAY)
+		return *reinterpret_cast<const DVector<Point2i>* >(_data._mem);
+	else
+		return _convert_array_from_variant<DVector<Point2i> >(*this);
+
+
+}
 Variant::operator DVector<Color>() const {
 
 	if (type==COLOR_ARRAY)
@@ -2040,7 +2104,7 @@ Variant::operator Vector<Vector2>() const {
 	}
 	return to;
 }
-/*
+
 Variant::operator Vector<Point2i>() const {
 
 	DVector<Point2i> from = operator DVector<Point2i>();
@@ -2056,7 +2120,7 @@ Variant::operator Vector<Point2i>() const {
 		w[i] = r[i];
 	}
 	return to;
-}*/
+}
 
 Variant::operator DVector<Plane>() const {
 
@@ -2539,7 +2603,7 @@ Variant::Variant(const Vector<Vector2>& p_array) {
 	}
 	*this=v;
 }
-/*
+
 Variant::Variant(const Vector<Point2i>& p_array) {
 
 
@@ -2555,7 +2619,7 @@ Variant::Variant(const Vector<Point2i>& p_array) {
 			w[i] = r[i];
 	}
 	*this = v;
-}*/
+}
 
 Variant::Variant(const DVector<uint8_t>& p_raw_array) {
 
@@ -2592,6 +2656,12 @@ Variant::Variant(const DVector<Vector2>& p_vector2_array) {
 
 	type=VECTOR2_ARRAY;
 	memnew_placement( _data._mem, DVector<Vector2>(p_vector2_array) );
+
+}
+Variant::Variant(const DVector<Point2i>& p_point2i_array) {
+
+	type = POINT2I_ARRAY;
+	memnew_placement(_data._mem, DVector<Point2i>(p_point2i_array));
 
 }
 Variant::Variant(const DVector<Color>& p_color_array) {
@@ -2956,6 +3026,21 @@ uint32_t Variant::hash() const {
 			for(int i=0;i<len;i++) {
 				hash = hash_djb2_one_float(r[i].x,hash);
 				hash = hash_djb2_one_float(r[i].y,hash);
+			}
+
+			return hash;
+
+		} break;
+		case POINT2I_ARRAY: {
+
+			uint32_t hash = 5831;
+			const DVector<Point2i>& arr = *reinterpret_cast<const DVector<Point2i>* >(_data._mem);
+			int len = arr.size();
+			DVector<Point2i>::Read r = arr.read();
+
+			for (int i = 0;i<len;i++) {
+				hash = hash_djb2_one_32(r[i].x, hash);
+				hash = hash_djb2_one_32(r[i].y, hash);
 			}
 
 			return hash;

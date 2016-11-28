@@ -807,6 +807,7 @@ void GDTokenizerText::_advance() {
 							{Variant::REAL_ARRAY,"FloatArray"},
 							{Variant::STRING_ARRAY,"StringArray"},
 							{Variant::VECTOR2_ARRAY,"Vector2Array"},
+							{Variant::POINT2I_ARRAY,"Point2iArray"},
 							{Variant::VECTOR3_ARRAY,"Vector3Array"},
 							{Variant::COLOR_ARRAY,"ColorArray"},
 							{Variant::VARIANT_MAX,NULL},
