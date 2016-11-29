@@ -409,10 +409,10 @@ bool Point2i::operator!=(const Point2i& p_vec2) const {
 }
 
 Point2i Point2i::normalized() const {
-	if (y * ((y > 0) - (y < 0)) * 3 < 2 * x * ((x > 0) - (x < 0))) {
+	if ((y * ((y > 0) - (y < 0)) * 3) < (2 * x * ((x > 0) - (x < 0)))) {
 		return Point2i((x > 0) - (x < 0), 0);
 	}
-	if (x * ((x > 0) - (x < 0)) * 3 < 2 * y * ((y > 0) - (y < 0))) {
+	if ((x * ((x > 0) - (x < 0)) * 3) < (2 * y * ((y > 0) - (y < 0)))) {
 		return Point2i(0, (y > 0) - (y < 0));
 	}
 	return Point2i((x > 0) - (x < 0), (y > 0) - (y < 0));
@@ -425,7 +425,7 @@ float Point2i::distance_to(const Point2i& p_vector2, float p_dcost) const {
 	absy = absy * (absy > 0) - absy * (absy < 0);
 	int dd = absx - absy;
 	// evaluate min (abs(dx), abs(dy)) * p_dcost + abs(abs(dx)-abs(dy))
-	return (absx * (absx <= absy) + absy*(absy < absx)) * p_dcost + dd * dd > 0 - dd * dd < 0;
+	return (absx * (absx <= absy) + absy*(absy < absx)) * p_dcost + dd * (dd > 0) - dd * (dd < 0);
 }
 
 void Matrix32::invert() {

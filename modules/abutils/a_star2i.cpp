@@ -31,7 +31,7 @@
 
 
 int AStar2i::_point2i_to_id(const Point2i& p_pt) {
-	return p_pt.x << 16 + p_pt.y;
+	return (p_pt.x << 16) + p_pt.y;
 }
 
 Point2i AStar2i::get_available_point() const {
