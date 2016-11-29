@@ -418,6 +418,16 @@ Point2i Point2i::normalized() const {
 	return Point2i((x > 0) - (x < 0), (y > 0) - (y < 0));
 }
 
+float Point2i::distance_to(const Point2i& p_vector2, float p_dcost) const {
+	int absx = x - p_vector2.x;
+	int absy = y - p_vector2.y;
+	absx = absx * (absx > 0) - absx * (absx < 0);
+	absy = absy * (absy > 0) - absy * (absy < 0);
+	int dd = absx - absy;
+	// evaluate min (abs(dx), abs(dy)) * p_dcost + abs(abs(dx)-abs(dy))
+	return (absx * (absx <= absy) + absy*(absy < absx)) * p_dcost + dd * dd > 0 - dd * dd < 0;
+}
+
 void Matrix32::invert() {
 
 	SWAP(elements[0][1],elements[1][0]);

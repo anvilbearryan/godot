@@ -1,5 +1,6 @@
 #include "one_way_tile_map.h"
 
+
 void OneWayTileMap::set_one_way_collision_direction(const Vector2& p_dir) {
 
 	one_way_collision_direction = p_dir;

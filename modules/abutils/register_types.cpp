@@ -34,7 +34,7 @@
 #include "anchored_animated_sprite.h"
 #include "abmath.h"
 #include "one_way_tile_map.h"
-//#include "precise_visibility_notifier_2d.h"
+#include "a_star2i.h"
 
 void register_abutils_types() {
 	ObjectTypeDB::register_type<Arrow2D>();
@@ -43,7 +43,7 @@ void register_abutils_types() {
 	ObjectTypeDB::register_type<AnchoredAnimatedSprite>();
 	ObjectTypeDB::register_type<ABMath>();
 	ObjectTypeDB::register_type<OneWayTileMap>();
-	//ObjectTypeDB::register_type<PreciseVisibilityNotifier2D>();
+	ObjectTypeDB::register_type<AStar2i>();
 }
 
 void unregister_abutils_types() {

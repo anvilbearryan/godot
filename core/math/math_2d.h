@@ -412,6 +412,8 @@ struct Point2i {
 
 	int dot(const Point2i& p_vec2) const { return x * p_vec2.x + y * p_vec2.y; }
 	Point2i normalized() const;
+	
+	float distance_to(const Point2i& p_vector2, float p_dcost) const;
 
 	float get_aspect() const { return width/(float)height; }
 
