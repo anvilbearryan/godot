@@ -290,6 +290,9 @@ void TileMap::_update_dirty_quadrants() {
 	if (debug_shapes) {
 		debug_collision_color=st->get_debug_collisions_color();
 	}
+	// begin anvilbear modification
+	RID sort_parent = y_sorter == NULL ? get_canvas_item() : y_sorter->get_canvas_item();
+	// end anvilbear modification
 
 	while (dirty_quadrant_list.first()) {
 
@@ -347,7 +350,11 @@ void TileMap::_update_dirty_quadrants() {
 				canvas_item=vs->canvas_item_create();
 				if (mat.is_valid())
 					vs->canvas_item_set_material(canvas_item,mat->get_rid());
-				vs->canvas_item_set_parent( canvas_item, get_canvas_item() );
+				
+				// begin anvilbear modification
+				vs->canvas_item_set_parent( canvas_item, sort_parent );
+				// end anvilbear modification
+
 				Matrix32 xform;
 				xform.set_origin( q.pos );
 				vs->canvas_item_set_transform( canvas_item, xform );
@@ -1150,6 +1157,14 @@ bool TileMap::is_y_sort_mode_enabled() const {
 	return y_sort_mode;
 }
 
+// mocks set_y_sort
+void TileMap::set_y_sorter(Node* p_node) {
+	_clear_quadrants();
+	y_sorter = p_node != NULL ? p_node->cast_to<Node2D>() : NULL;
+	_recreate_quadrants();
+	emit_signal("settings_changed");
+}
+
 Array TileMap::get_used_cells() const {
 
 	Array a;
@@ -1233,6 +1248,10 @@ void TileMap::_bind_methods() {
 
 	ObjectTypeDB::bind_method(_MD("set_y_sort_mode","enable"),&TileMap::set_y_sort_mode);
 	ObjectTypeDB::bind_method(_MD("is_y_sort_mode_enabled"),&TileMap::is_y_sort_mode_enabled);
+
+	// begin anvilbear modification
+	ObjectTypeDB::bind_method(_MD("set_y_sorter", "y_sorter"), &TileMap::set_y_sorter);
+	// end anvilbear modification
 
 	ObjectTypeDB::bind_method(_MD("set_collision_use_kinematic","use_kinematic"),&TileMap::set_collision_use_kinematic);
 	ObjectTypeDB::bind_method(_MD("get_collision_use_kinematic"),&TileMap::get_collision_use_kinematic);

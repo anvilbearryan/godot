@@ -250,6 +250,11 @@ public:
 	void set_y_sort_mode(bool p_enable);
 	bool is_y_sort_mode_enabled() const;
 
+	// begin anvilbear modification
+	Node2D* y_sorter;
+	void set_y_sorter(Node* p_node);
+	// end anvilbear modification
+
 	void set_occluder_light_mask(int p_mask);
 	int get_occluder_light_mask() const;
 
