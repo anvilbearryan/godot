@@ -1350,6 +1350,8 @@ TileMap::TileMap() {
 
 	fp_adjust=0.00001;
 	tile_origin=TILE_ORIGIN_TOP_LEFT;
+
+	y_sorter=NULL;
 }
 
 TileMap::~TileMap() {
